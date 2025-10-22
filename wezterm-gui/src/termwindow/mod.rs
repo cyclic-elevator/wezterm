@@ -1728,6 +1728,10 @@ impl TermWindow {
             "config was reloaded, overrides: {:?}",
             self.config_overrides
         );
+        
+        // Invalidate tab title cache on config reload
+        crate::tab_title_cache::invalidate_tab_title_cache();
+        
         self.key_table_state.clear_stack();
         self.connection_name = Connection::get().unwrap().name();
         let config = match config::overridden_config(&self.config_overrides) {
@@ -1955,6 +1959,8 @@ impl TermWindow {
     /// Called by window:set_right_status after the status has
     /// been updated; let's update the bar
     pub fn update_title_post_status(&mut self) {
+        // Invalidate tab title cache when tab state changes
+        crate::tab_title_cache::invalidate_tab_title_cache();
         self.update_title_impl();
     }
 

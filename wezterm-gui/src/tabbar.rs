@@ -37,9 +37,9 @@ pub struct TabEntry {
 }
 
 #[derive(Clone, Debug)]
-struct TitleText {
-    items: Vec<FormatItem>,
-    len: usize,
+pub struct TitleText {
+    pub items: Vec<FormatItem>,
+    pub len: usize,
 }
 
 fn call_format_tab_title(
@@ -138,78 +138,21 @@ fn compute_tab_title(
     hover: bool,
     tab_max_width: usize,
 ) -> TitleText {
-    let title = call_format_tab_title(tab, tab_info, pane_info, config, hover, tab_max_width);
-
-    match title {
-        Some(title) => title,
-        None => {
-            let mut items = vec![];
-            let mut len = 0;
-
-            if let Some(pane) = &tab.active_pane {
-                let mut title = if tab.tab_title.is_empty() {
-                    pane.title.clone()
-                } else {
-                    tab.tab_title.clone()
-                };
-
-                let classic_spacing = if config.use_fancy_tab_bar { "" } else { " " };
-                if config.show_tab_index_in_tab_bar {
-                    let index = format!(
-                        "{classic_spacing}{}: ",
-                        tab.tab_index
-                            + if config.tab_and_split_indices_are_zero_based {
-                                0
-                            } else {
-                                1
-                            }
-                    );
-                    len += unicode_column_width(&index, None);
-                    items.push(FormatItem::Text(index));
-
-                    title = format!("{}{classic_spacing}", title);
-                }
-
-                match pane.progress {
-                    Progress::None => {}
-                    Progress::Percentage(pct) | Progress::Error(pct) => {
-                        let graphic = format!("{} ", pct_to_glyph(pct));
-                        len += unicode_column_width(&graphic, None);
-                        let color = if matches!(pane.progress, Progress::Percentage(_)) {
-                            FormatItem::Foreground(FormatColor::AnsiColor(AnsiColor::Green))
-                        } else {
-                            FormatItem::Foreground(FormatColor::AnsiColor(AnsiColor::Red))
-                        };
-                        items.push(color);
-                        items.push(FormatItem::Text(graphic));
-                        items.push(FormatItem::Foreground(FormatColor::Default));
-                    }
-                    Progress::Indeterminate => {
-                        // TODO: Decide what to do here to indicate this
-                    }
-                }
-
-                // We have a preferred soft minimum on tab width to make it
-                // easier to click on tab titles, but we'll still go below
-                // this if there are too many tabs to fit the window at
-                // this width.
-                if !config.use_fancy_tab_bar {
-                    while len + unicode_column_width(&title, None) < 5 {
-                        title.push(' ');
-                    }
-                }
-
-                len += unicode_column_width(&title, None);
-                items.push(FormatItem::Text(title));
-            } else {
-                let title = " no pane ".to_string();
-                len += unicode_column_width(&title, None);
-                items.push(FormatItem::Text(title));
-            };
-
-            TitleText { len, items }
-        }
-    }
+    // Use cached version - check cache first for instant return
+    crate::tab_title_cache::get_tab_title_cached(
+        tab,
+        hover,
+        || {
+            call_format_tab_title(
+                tab,
+                tab_info,
+                pane_info,
+                config,
+                hover,
+                tab_max_width,
+            )
+        },
+    )
 }
 
 fn is_tab_hover(mouse_x: Option<usize>, x: usize, tab_title_len: usize) -> bool {

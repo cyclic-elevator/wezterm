@@ -51,6 +51,7 @@ mod selection;
 mod shapecache;
 mod spawn;
 mod stats;
+mod tab_title_cache;
 mod tabbar;
 mod termwindow;
 mod unicode_names;

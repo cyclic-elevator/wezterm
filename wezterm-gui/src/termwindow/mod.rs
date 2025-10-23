@@ -618,20 +618,21 @@ impl TermWindow {
         *self.last_activity.borrow_mut() = Instant::now();
     }
     
-    /// Update frame rate target based on activity and performance (Phase 15.2.B)
+    /// Update frame rate target based on activity and performance (Phase 15.2.B, fixed in Phase 17.4)
     fn update_frame_rate_target(&self) {
         let now = Instant::now();
         let idle_time = now.duration_since(*self.last_activity.borrow());
         
-        // Determine frame rate mode based on activity
-        let new_mode = if idle_time < Duration::from_millis(100) {
-            // Recent activity (< 100ms ago): high frame rate
+        // Phase 17.4: Fixed thresholds to prevent mode thrashing during interactive use
+        // The 100ms threshold was too aggressive and caused constant switching during resize
+        let new_mode = if idle_time < Duration::from_secs(2) {
+            // Stay in high frame rate for all interactive use (< 2s idle)
             FrameRateMode::High
-        } else if idle_time < Duration::from_secs(2) {
-            // Moderate activity (100ms - 2s ago): medium frame rate
+        } else if idle_time < Duration::from_secs(10) {
+            // Medium frame rate only after truly idle (2-10s)
             FrameRateMode::Medium
         } else {
-            // Idle (> 2s ago): low frame rate for power saving
+            // Low frame rate only when completely inactive (> 10s)
             FrameRateMode::Low
         };
         

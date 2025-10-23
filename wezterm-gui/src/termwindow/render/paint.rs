@@ -107,6 +107,63 @@ impl crate::TermWindow {
 
         self.call_draw(frame).ok();
         self.last_frame_duration = start.elapsed();
+        
+        // Track frame times for variance analysis
+        {
+            let mut frame_times = self.frame_times.borrow_mut();
+            frame_times.push(self.last_frame_duration);
+            
+            // Keep last 120 frames (2 seconds at 60fps)
+            if frame_times.len() > 120 {
+                frame_times.remove(0);
+            }
+        }
+        
+        // Log slow frames for performance analysis
+        let frame_ms = self.last_frame_duration.as_millis();
+        if frame_ms > 20 {
+            log::warn!(
+                "SLOW FRAME: {:?} ({:.1}ms, target: 16.67ms for 60fps)",
+                self.last_frame_duration,
+                frame_ms as f64
+            );
+        }
+        
+        // Log frame statistics every 5 seconds
+        {
+            let mut last_stats = self.last_frame_stats_log.borrow_mut();
+            if start.duration_since(*last_stats) >= Duration::from_secs(5) {
+                *last_stats = start;
+                
+                let frame_times = self.frame_times.borrow();
+                if frame_times.len() > 10 {
+                    let count = frame_times.len();
+                    let sum: Duration = frame_times.iter().sum();
+                    let avg = sum / count as u32;
+                    
+                    let mut sorted = frame_times.clone();
+                    sorted.sort();
+                    let min = sorted[0];
+                    let max = sorted[count - 1];
+                    let median = sorted[count / 2];
+                    let p95 = sorted[(count as f32 * 0.95) as usize];
+                    let p99 = sorted[(count as f32 * 0.99) as usize];
+                    
+                    log::info!(
+                        "Frame time stats (last {}): avg={:.1}ms, median={:.1}ms, min={:.1}ms, max={:.1}ms, p95={:.1}ms, p99={:.1}ms, variance={:.1}ms",
+                        count,
+                        avg.as_secs_f64() * 1000.0,
+                        median.as_secs_f64() * 1000.0,
+                        min.as_secs_f64() * 1000.0,
+                        max.as_secs_f64() * 1000.0,
+                        p95.as_secs_f64() * 1000.0,
+                        p99.as_secs_f64() * 1000.0,
+                        (max - min).as_secs_f64() * 1000.0
+                    );
+                }
+            }
+        }
+        
         log::debug!(
             "paint_impl elapsed={:?}, fps={}",
             self.last_frame_duration,

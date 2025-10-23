@@ -470,6 +470,10 @@ pub struct TermWindow {
     last_fps_check_time: Instant,
     num_frames: usize,
     pub fps: f32,
+    
+    // Frame time variance tracking for performance analysis
+    frame_times: RefCell<Vec<Duration>>,
+    last_frame_stats_log: RefCell<Instant>,
 
     connection_name: String,
 
@@ -697,6 +701,8 @@ impl TermWindow {
             num_frames: 0,
             last_frame_duration: Duration::ZERO,
             fps: 0.,
+            frame_times: RefCell::new(Vec::with_capacity(120)),
+            last_frame_stats_log: RefCell::new(Instant::now()),
             config_subscription: None,
             os_parameters: None,
             gl: None,

@@ -456,20 +456,27 @@ pub struct RenderLayer {
     pub vb: RefCell<[TripleVertexBuffer; 3]>,
     context: RenderContext,
     zindex: i8,
+    buffer_pool: Rc<VertexBufferPool>,
 }
 
 impl RenderLayer {
-    pub fn new(context: &RenderContext, num_quads: usize, zindex: i8) -> anyhow::Result<Self> {
+    pub fn new(
+        context: &RenderContext,
+        buffer_pool: &Rc<VertexBufferPool>,
+        num_quads: usize,
+        zindex: i8,
+    ) -> anyhow::Result<Self> {
         let vb = [
-            Self::compute_vertices(context, 32)?,
-            Self::compute_vertices(context, num_quads)?,
-            Self::compute_vertices(context, 32)?,
+            Self::compute_vertices(context, buffer_pool, 32)?,
+            Self::compute_vertices(context, buffer_pool, num_quads)?,
+            Self::compute_vertices(context, buffer_pool, 32)?,
         ];
 
         Ok(Self {
             context: context.clone(),
             vb: RefCell::new(vb),
             zindex,
+            buffer_pool: Rc::clone(buffer_pool),
         })
     }
 
@@ -501,8 +508,22 @@ impl RenderLayer {
     }
 
     pub fn reallocate_quads(&self, idx: usize, num_quads: usize) -> anyhow::Result<()> {
-        let vb = Self::compute_vertices(&self.context, num_quads)?;
+        // Note: Old buffers are not released back to pool as VertexBuffer doesn't implement Clone.
+        // They will be dropped naturally. The pool will still help by reusing buffers during
+        // the acquire() calls in compute_vertices().
+        
+        // Allocate new buffers from pool
+        let vb = Self::compute_vertices(&self.context, &self.buffer_pool, num_quads)?;
         self.vb.borrow_mut()[idx] = vb;
+        
+        log::info!(
+            "Reallocated quads for layer zindex={} index={}: {} quads (pool stats: {:?})",
+            self.zindex,
+            idx,
+            num_quads,
+            self.buffer_pool.stats()
+        );
+        
         Ok(())
     }
 
@@ -514,13 +535,13 @@ impl RenderLayer {
     /// let the GPU figure out the rest.
     fn compute_vertices(
         context: &RenderContext,
+        buffer_pool: &Rc<VertexBufferPool>,
         num_quads: usize,
     ) -> anyhow::Result<TripleVertexBuffer> {
-        let verts = context.allocate_vertex_buffer_initializer(num_quads);
-        log::trace!(
-            "compute_vertices num_quads={}, allocated {} bytes",
+        log::debug!(
+            "compute_vertices num_quads={}, attempting to use buffer pool (stats: {:?})",
             num_quads,
-            verts.len() * std::mem::size_of::<Vertex>()
+            buffer_pool.stats()
         );
         let mut indices = vec![];
         indices.reserve(num_quads * INDICES_PER_CELL);
@@ -538,13 +559,19 @@ impl RenderLayer {
             indices.push(idx + V_BOT_RIGHT as u32);
         }
 
+        // Try to acquire buffers from pool
+        let (cap1, buf1) = buffer_pool.acquire(num_quads)?;
+        let (cap2, buf2) = buffer_pool.acquire(num_quads)?;
+        let (cap3, buf3) = buffer_pool.acquire(num_quads)?;
+        
+        log::debug!(
+            "Acquired buffers: cap1={}, cap2={}, cap3={} for num_quads={} (stats: {:?})",
+            cap1, cap2, cap3, num_quads, buffer_pool.stats()
+        );
+
         let buffer = TripleVertexBuffer {
             index: RefCell::new(0),
-            bufs: RefCell::new([
-                context.allocate_vertex_buffer(num_quads, &verts)?,
-                context.allocate_vertex_buffer(num_quads, &verts)?,
-                context.allocate_vertex_buffer(num_quads, &verts)?,
-            ]),
+            bufs: RefCell::new([buf1, buf2, buf3]),
             capacity: num_quads,
             indices: context.allocate_index_buffer(&indices)?,
             next_quad: RefCell::new(0),
@@ -599,8 +626,8 @@ impl RenderState {
                         RenderContext::WebGpu(_) => None,
                     };
 
-                    let main_layer = Rc::new(RenderLayer::new(&context, 1024, 0)?);
                     let buffer_pool = Rc::new(VertexBufferPool::new(&context));
+                    let main_layer = Rc::new(RenderLayer::new(&context, &buffer_pool, 1024, 0)?);
 
                     return Ok(Self {
                         context,
@@ -634,7 +661,7 @@ impl RenderState {
             return Ok(layer);
         }
 
-        let layer = Rc::new(RenderLayer::new(&self.context, 128, zindex)?);
+        let layer = Rc::new(RenderLayer::new(&self.context, &self.buffer_pool, 128, zindex)?);
         let mut layers = self.layers.borrow_mut();
         layers.push(Rc::clone(&layer));
 

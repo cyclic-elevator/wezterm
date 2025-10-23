@@ -15,6 +15,39 @@ pub enum AllowImage {
 
 impl crate::TermWindow {
     pub fn paint_impl(&mut self, frame: &mut RenderFrame) {
+        // Apply any pending texture atlas growth from previous frame
+        let pending_growth = self.pending_texture_growth.borrow_mut().take();
+        if let Some(new_size) = pending_growth {
+            let growth_start = Instant::now();
+            let deferred_count = *self.texture_growth_deferred_count.borrow();
+            
+            log::info!(
+                "Applying deferred texture atlas growth to {} (deferred {} times)",
+                new_size,
+                deferred_count
+            );
+            
+            match self.recreate_texture_atlas(Some(new_size)) {
+                Ok(_) => {
+                    let elapsed = growth_start.elapsed();
+                    log::info!(
+                        "Texture atlas growth completed in {:?}",
+                        elapsed
+                    );
+                    // Reset deferred count after successful growth
+                    *self.texture_growth_deferred_count.borrow_mut() = 0;
+                }
+                Err(e) => {
+                    log::error!(
+                        "Failed to grow texture atlas: {:#}. Will retry next frame.",
+                        e
+                    );
+                    // Re-queue for next frame
+                    *self.pending_texture_growth.borrow_mut() = Some(new_size);
+                }
+            }
+        }
+        
         self.num_frames += 1;
         // If nothing on screen needs animating, then we can avoid
         // invalidating as frequently
@@ -55,40 +88,53 @@ impl crate::TermWindow {
                         current_size,
                     }) = err.root_cause().downcast_ref::<OutOfTextureSpace>()
                     {
-                        let result = if pass == 0 {
-                            // Let's try clearing out the atlas and trying again
-                            // self.clear_texture_atlas()
-                            log::trace!("recreate_texture_atlas");
-                            self.recreate_texture_atlas(Some(current_size))
-                        } else {
-                            log::trace!("grow texture atlas to {}", size);
-                            self.recreate_texture_atlas(Some(size))
-                        };
-                        self.invalidate_fancy_tab_bar();
-                        self.invalidate_modal();
+                        // Only grow synchronously on first pass (clearing current size)
+                        // On subsequent passes, defer the growth to next frame to avoid blocking
+                        if pass == 0 {
+                            // First pass: try clearing/recreating at current size
+                            log::trace!("recreate_texture_atlas at current size {}", current_size);
+                            let result = self.recreate_texture_atlas(Some(current_size));
+                            self.invalidate_fancy_tab_bar();
+                            self.invalidate_modal();
 
-                        if let Err(err) = result {
+                            if let Err(err) = result {
+                                log::error!("Failed to recreate texture atlas: {}", err);
+                                break 'pass;
+                            }
+                        } else {
+                            // Subsequent passes: defer growth to avoid blocking current frame
+                            if self.pending_texture_growth.borrow().is_none() {
+                                *self.pending_texture_growth.borrow_mut() = Some(size);
+                                *self.texture_growth_deferred_count.borrow_mut() += 1;
+                                
+                                log::warn!(
+                                    "Texture atlas out of space (need {}, current {}). Deferring growth to next frame (deferred {} times).",
+                                    size,
+                                    current_size,
+                                    self.texture_growth_deferred_count.borrow()
+                                );
+                            }
+                            
+                            // Use current atlas with degraded quality for this frame
                             self.allow_images = match self.allow_images {
                                 AllowImage::Yes => AllowImage::Scale(2),
                                 AllowImage::Scale(2) => AllowImage::Scale(4),
                                 AllowImage::Scale(4) => AllowImage::Scale(8),
                                 AllowImage::Scale(8) => AllowImage::No,
                                 AllowImage::No | _ => {
-                                    log::error!(
-                                        "Failed to {} texture: {}",
-                                        if pass == 0 { "clear" } else { "resize" },
-                                        err
-                                    );
-                                    break 'pass;
+                                    log::warn!("Already at maximum image scaling, skipping images this frame");
+                                    AllowImage::No
                                 }
                             };
 
                             log::info!(
-                                "Not enough texture space ({:#}); \
-                                     will retry render with {:?}",
-                                err,
-                                self.allow_images,
+                                "Not enough texture space; rendering with degraded quality {:?} this frame",
+                                self.allow_images
                             );
+                            
+                            self.invalidate_fancy_tab_bar();
+                            self.invalidate_modal();
+                            // Don't break - continue rendering with degraded quality
                         }
                     } else if err.root_cause().downcast_ref::<ClearShapeCache>().is_some() {
                         self.invalidate_fancy_tab_bar();

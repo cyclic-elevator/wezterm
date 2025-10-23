@@ -1148,24 +1148,41 @@ impl WaylandWindowInner {
 
         if self.frame_callback.is_some() {
             // GPU stall detection: Check how long we've been waiting for frame callback
+            // Progressive warnings help identify severity
             if let Some(start) = self.frame_callback_start {
                 let wait_time = Instant::now().duration_since(start);
+                let since_last_warning = Instant::now().duration_since(self.last_gpu_stall_warning);
                 
-                // Warn if we've been waiting more than 100ms
-                if wait_time > Duration::from_millis(100) {
-                    let since_last_warning = Instant::now().duration_since(self.last_gpu_stall_warning);
-                    
-                    // Only warn once per second to avoid log spam
+                // Progressive warnings based on severity
+                if wait_time > Duration::from_millis(500) {
+                    // SEVERE: >500ms stalls are critical
                     if since_last_warning > Duration::from_secs(1) {
                         self.gpu_stall_count += 1;
-                        log::warn!(
-                            "GPU stall detected: waiting {:?} for frame callback (stall #{})! \
-                            This may indicate GPU driver issues, slow GPU operations, or compositor lag.",
+                        log::error!(
+                            "SEVERE GPU stall: waiting {:?} for frame callback (stall #{})! \
+                            GPU may be hung or driver issue. This significantly impacts responsiveness. \
+                            Consider: updating GPU drivers, reducing terminal content, or reporting this issue.",
                             wait_time,
                             self.gpu_stall_count
                         );
                         self.last_gpu_stall_warning = Instant::now();
                     }
+                } else if wait_time > Duration::from_millis(200) {
+                    // SIGNIFICANT: 200-500ms stalls are problematic
+                    if since_last_warning > Duration::from_secs(2) {
+                        self.gpu_stall_count += 1;
+                        log::warn!(
+                            "Significant GPU stall: waiting {:?} for frame callback (stall #{})! \
+                            This may indicate GPU driver issues or slow GPU operations. \
+                            Performance may be degraded.",
+                            wait_time,
+                            self.gpu_stall_count
+                        );
+                        self.last_gpu_stall_warning = Instant::now();
+                    }
+                } else if wait_time > Duration::from_millis(100) {
+                    // MODERATE: 100-200ms stalls are noticeable but manageable
+                    // Already logged at INFO level by next_frame_is_ready()
                 }
             }
             

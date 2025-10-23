@@ -475,6 +475,10 @@ pub struct TermWindow {
     frame_times: RefCell<Vec<Duration>>,
     last_frame_stats_log: RefCell<Instant>,
 
+    // Deferred texture atlas growth
+    pending_texture_growth: RefCell<Option<usize>>,
+    texture_growth_deferred_count: RefCell<usize>,
+
     connection_name: String,
 
     gl: Option<Rc<glium::backend::Context>>,
@@ -703,6 +707,8 @@ impl TermWindow {
             fps: 0.,
             frame_times: RefCell::new(Vec::with_capacity(120)),
             last_frame_stats_log: RefCell::new(Instant::now()),
+            pending_texture_growth: RefCell::new(None),
+            texture_growth_deferred_count: RefCell::new(0),
             config_subscription: None,
             os_parameters: None,
             gl: None,

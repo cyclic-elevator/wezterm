@@ -1,3 +1,4 @@
+use super::bufferpool::VertexBufferPool;
 use super::glyphcache::GlyphCache;
 use super::quad::*;
 use super::utilsprites::{RenderMetrics, UtilSprites};
@@ -576,6 +577,7 @@ pub struct RenderState {
     pub util_sprites: UtilSprites,
     pub glyph_prog: Option<glium::Program>,
     pub layers: RefCell<Vec<Rc<RenderLayer>>>,
+    pub buffer_pool: Rc<VertexBufferPool>,
 }
 
 impl RenderState {
@@ -598,6 +600,7 @@ impl RenderState {
                     };
 
                     let main_layer = Rc::new(RenderLayer::new(&context, 1024, 0)?);
+                    let buffer_pool = Rc::new(VertexBufferPool::new(&context));
 
                     return Ok(Self {
                         context,
@@ -605,6 +608,7 @@ impl RenderState {
                         util_sprites,
                         glyph_prog,
                         layers: RefCell::new(vec![main_layer]),
+                        buffer_pool,
                     });
                 }
                 Err(OutOfTextureSpace {

@@ -330,6 +330,9 @@ impl WaylandWindow {
             last_resize: Instant::now(),
             pending_resize: None,
             dirty_regions: RefCell::new(Vec::new()),
+            frame_callback_start: None,
+            last_gpu_stall_warning: Instant::now(),
+            gpu_stall_count: 0,
 
             config,
 
@@ -598,6 +601,10 @@ pub struct WaylandWindowInner {
     pending_resize: Option<(u32, u32)>,
     // Track dirty regions for damage tracking
     dirty_regions: RefCell<Vec<Rect>>,
+    // GPU stall diagnostics
+    frame_callback_start: Option<Instant>,
+    last_gpu_stall_warning: Instant,
+    gpu_stall_count: usize,
     // font_config: Rc<FontConfiguration>,
     text_cursor: Option<Rect>,
     appearance: Appearance,
@@ -1140,6 +1147,28 @@ impl WaylandWindowInner {
         }
 
         if self.frame_callback.is_some() {
+            // GPU stall detection: Check how long we've been waiting for frame callback
+            if let Some(start) = self.frame_callback_start {
+                let wait_time = Instant::now().duration_since(start);
+                
+                // Warn if we've been waiting more than 100ms
+                if wait_time > Duration::from_millis(100) {
+                    let since_last_warning = Instant::now().duration_since(self.last_gpu_stall_warning);
+                    
+                    // Only warn once per second to avoid log spam
+                    if since_last_warning > Duration::from_secs(1) {
+                        self.gpu_stall_count += 1;
+                        log::warn!(
+                            "GPU stall detected: waiting {:?} for frame callback (stall #{})! \
+                            This may indicate GPU driver issues, slow GPU operations, or compositor lag.",
+                            wait_time,
+                            self.gpu_stall_count
+                        );
+                        self.last_gpu_stall_warning = Instant::now();
+                    }
+                }
+            }
+            
             // Painting now won't be productive, so skip it but
             // remember that we need to be painted so that when
             // the compositor is ready for us, we can paint then.
@@ -1157,6 +1186,9 @@ impl WaylandWindowInner {
         let callback = self.surface().frame(&qh, self.surface().clone());
 
         log::trace!("do_paint - callback: {:?}", callback);
+        
+        // Track when we started waiting for this frame callback
+        self.frame_callback_start = Some(Instant::now());
         self.frame_callback.replace(callback);
 
         // Send damage regions to compositor for efficient rendering
@@ -1238,6 +1270,19 @@ impl WaylandWindowInner {
     }
 
     pub(crate) fn next_frame_is_ready(&mut self) {
+        // Log frame callback timing if GPU stall was detected
+        if let Some(start) = self.frame_callback_start.take() {
+            let wait_time = Instant::now().duration_since(start);
+            if wait_time > Duration::from_millis(100) {
+                log::info!(
+                    "Frame callback completed after {:?} wait (stall resolved)",
+                    wait_time
+                );
+            } else {
+                log::trace!("Frame callback completed after {:?}", wait_time);
+            }
+        }
+        
         self.frame_callback.take();
         if self.invalidated {
             self.do_paint().ok();

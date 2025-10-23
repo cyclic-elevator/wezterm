@@ -334,7 +334,8 @@ impl TabBarState {
 
         let mut active_tab_no = 0;
 
-        let tab_titles: Vec<TitleText> = if config.show_tabs_in_tab_bar {
+        // First pass: compute titles with max width to measure space needed
+        let initial_titles: Vec<TitleText> = if config.show_tabs_in_tab_bar {
             tab_info
                 .iter()
                 .map(|tab| {
@@ -354,8 +355,8 @@ impl TabBarState {
         } else {
             vec![]
         };
-        let titles_len: usize = tab_titles.iter().map(|s| s.len).sum();
-        let number_of_tabs = tab_titles.len();
+        let titles_len: usize = initial_titles.iter().map(|s| s.len).sum();
+        let number_of_tabs = initial_titles.len();
 
         let available_cells =
             title_width.saturating_sub(number_of_tabs.saturating_sub(1) + new_tab.len());
@@ -367,17 +368,57 @@ impl TabBarState {
             available_cells / number_of_tabs
         }
         .min(config.tab_max_width);
-
-        let mut line = Line::with_width(0, SEQ_ZERO);
-
-        let mut x = 0;
-        let mut items = vec![];
-
+        
+        // Second pass: compute titles with adjusted width and hover state
+        // Track X position to determine hover state
         let black_cell = Cell::blank_with_attrs(
             CellAttributes::default()
                 .set_background(ColorSpec::TrueColor(*colors.background()))
                 .clone(),
         );
+        
+        let mut temp_x = 0;
+        if use_integrated_title_buttons
+            && config.integrated_title_button_style == IntegratedTitleButtonStyle::MacOsNative
+            && config.use_fancy_tab_bar == false
+            && config.tab_bar_at_bottom == false
+        {
+            temp_x = 10;
+        }
+        
+        let left_status_len = parse_status_text(left_status, black_cell.attrs().clone()).len();
+        temp_x += left_status_len;
+        
+        let tab_titles: Vec<TitleText> = if config.show_tabs_in_tab_bar {
+            tab_info
+                .iter()
+                .enumerate()
+                .map(|(tab_idx, tab)| {
+                    let tab_title_len = initial_titles[tab_idx].len.min(tab_width_max);
+                    let active = tab_idx == active_tab_no;
+                    let hover = !active && is_tab_hover(mouse_x, temp_x, tab_title_len);
+                    
+                    let title = compute_tab_title(
+                        tab,
+                        tab_info,
+                        pane_info,
+                        config,
+                        hover,
+                        tab_title_len,
+                    );
+                    
+                    temp_x += tab_title_len + 1; // +1 for separator
+                    title
+                })
+                .collect()
+        } else {
+            vec![]
+        };
+
+        let mut line = Line::with_width(0, SEQ_ZERO);
+
+        let mut x = 0;
+        let mut items = vec![];
 
         if use_integrated_title_buttons
             && config.integrated_title_button_style == IntegratedTitleButtonStyle::MacOsNative
@@ -414,17 +455,7 @@ impl TabBarState {
             let active = tab_idx == active_tab_no;
             let hover = !active && is_tab_hover(mouse_x, x, tab_title_len);
 
-            // Recompute the title so that it factors in both the hover state
-            // and the adjusted maximum tab width based on available space.
-            let tab_title = compute_tab_title(
-                &tab_info[tab_idx],
-                tab_info,
-                pane_info,
-                config,
-                hover,
-                tab_title_len,
-            );
-
+            // Title already computed with hover state and adjusted width above
             let cell_attrs = if active {
                 &active_cell_attrs
             } else if hover {

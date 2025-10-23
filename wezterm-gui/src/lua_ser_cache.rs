@@ -12,7 +12,6 @@ use mux::tab::TabId;
 use mux::pane::PaneId;
 use std::collections::HashMap;
 use std::sync::Mutex;
-use std::time::Instant;
 
 lazy_static::lazy_static! {
     /// Cache for TabInformation Lua tables
@@ -28,8 +27,6 @@ lazy_static::lazy_static! {
 struct CacheEntry {
     /// Lua registry key for the cached table
     registry_key: LuaRegistryKey,
-    /// When this was last accessed
-    last_access: Instant,
     /// Generation number for bulk invalidation
     generation: usize,
 }
@@ -77,10 +74,9 @@ where
         F: FnOnce(&'lua Lua, &T) -> LuaResult<LuaTable<'lua>>,
     {
         // Check if we have a cached entry with current generation
-        if let Some(entry) = self.entries.get_mut(&id) {
+        if let Some(entry) = self.entries.get(&id) {
             if entry.generation == self.generation {
                 // Cache hit! Return the cached table
-                entry.last_access = Instant::now();
                 return lua.registry_value(&entry.registry_key);
             }
         }
@@ -94,7 +90,6 @@ where
             id.clone(),
             CacheEntry {
                 registry_key,
-                last_access: Instant::now(),
                 generation: self.generation,
             },
         );
@@ -116,18 +111,19 @@ where
         log::debug!("{} cache: cleared", self.name);
     }
 
-    /// Remove old entries that haven't been accessed recently
-    pub fn cleanup(&mut self, max_age: std::time::Duration) {
-        let now = Instant::now();
+    /// Remove old entries from previous generations
+    /// This is called during invalidation to free memory
+    pub fn cleanup_old_generations(&mut self) {
+        let current_gen = self.generation;
         let before_count = self.entries.len();
         
         self.entries.retain(|_, entry| {
-            now.duration_since(entry.last_access) < max_age
+            entry.generation == current_gen
         });
         
         let removed = before_count - self.entries.len();
         if removed > 0 {
-            log::debug!("{} cache: removed {} old entries", self.name, removed);
+            log::debug!("{} cache: removed {} old generation entries", self.name, removed);
         }
     }
 
@@ -234,18 +230,17 @@ pub fn invalidate_all_lua_caches() {
     log::debug!("All Lua serialization caches invalidated");
 }
 
-/// Cleanup old cache entries (call periodically)
+/// Cleanup old cache entries from previous generations
+/// This is automatically called during invalidation, but can be called manually
 pub fn cleanup_lua_caches() {
-    let max_age = std::time::Duration::from_secs(60);
-    
     {
         let mut cache = TAB_LUA_CACHE.lock().unwrap();
-        cache.cleanup(max_age);
+        cache.cleanup_old_generations();
     }
     
     {
         let mut cache = PANE_LUA_CACHE.lock().unwrap();
-        cache.cleanup(max_age);
+        cache.cleanup_old_generations();
     }
 }
 
@@ -288,7 +283,7 @@ mod tests {
         let mut cache: LuaTableCache<u32, String> = LuaTableCache::new("test");
         
         // Cleanup with empty cache should be safe
-        cache.cleanup(std::time::Duration::from_secs(1));
+        cache.cleanup_old_generations();
         assert_eq!(cache.len(), 0);
     }
 }

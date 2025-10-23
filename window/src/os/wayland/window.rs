@@ -329,6 +329,8 @@ impl WaylandWindow {
             resize_throttled: false,
             last_resize: Instant::now(),
             pending_resize: None,
+            resize_events_coalesced: 0,
+            last_coalesce_log: Instant::now(),
             dirty_regions: RefCell::new(Vec::new()),
             frame_callback_start: None,
             last_gpu_stall_warning: Instant::now(),
@@ -599,6 +601,9 @@ pub struct WaylandWindowInner {
     resize_throttled: bool,
     last_resize: Instant,
     pending_resize: Option<(u32, u32)>,
+    // Event coalescing metrics
+    resize_events_coalesced: usize,
+    last_coalesce_log: Instant,
     // Track dirty regions for damage tracking
     dirty_regions: RefCell<Vec<Rect>>,
     // GPU stall diagnostics
@@ -870,8 +875,20 @@ impl WaylandWindowInner {
             let throttle_duration = Duration::from_millis(16); // 16ms = ~60fps
             
             if now.duration_since(self.last_resize) < throttle_duration {
-                // Too soon since last resize - accumulate this change
+                // Too soon since last resize - accumulate this change (event coalescing!)
                 self.pending_resize = Some((w, h));
+                self.resize_events_coalesced += 1;
+                
+                // Log coalescing stats periodically
+                if now.duration_since(self.last_coalesce_log) >= Duration::from_secs(5) {
+                    log::info!(
+                        "Event coalescing: {} resize events coalesced in last 5s ({}x reduction)",
+                        self.resize_events_coalesced,
+                        self.resize_events_coalesced + 1
+                    );
+                    self.resize_events_coalesced = 0;
+                    self.last_coalesce_log = now;
+                }
                 
                 // Schedule a deferred resize if not already scheduled
                 if !self.resize_throttled {
@@ -884,6 +901,7 @@ impl WaylandWindowInner {
                             inner.resize_throttled = false;
                             if let Some((w, h)) = inner.pending_resize.take() {
                                 // Re-inject the pending resize as a new configure event
+                                log::debug!("Applying coalesced resize to {}x{}", w, h);
                                 inner.pending_event
                                     .lock()
                                     .unwrap()
@@ -896,7 +914,7 @@ impl WaylandWindowInner {
                     }).detach();
                 }
                 
-                log::trace!("Resize throttled, pending: w:{w}, h:{h}");
+                log::trace!("Resize event coalesced, pending: w:{w}, h:{h}");
                 return;  // Skip processing this resize event
             }
             

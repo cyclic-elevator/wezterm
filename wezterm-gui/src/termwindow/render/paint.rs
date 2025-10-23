@@ -15,6 +15,11 @@ pub enum AllowImage {
 
 impl crate::TermWindow {
     pub fn paint_impl(&mut self, frame: &mut RenderFrame) {
+        let frame_start = Instant::now();
+        
+        // Phase 15.2: Update adaptive frame rate target based on activity
+        self.update_frame_rate_target();
+        
         // Apply any pending texture atlas growth from previous frame
         let pending_growth = self.pending_texture_growth.borrow_mut().take();
         if let Some(new_size) = pending_growth {
@@ -55,15 +60,13 @@ impl crate::TermWindow {
         // Start with the assumption that we should allow images to render
         self.allow_images = AllowImage::Yes;
 
-        let start = Instant::now();
-
         {
-            let diff = start.duration_since(self.last_fps_check_time);
+            let diff = frame_start.duration_since(self.last_fps_check_time);
             if diff > Duration::from_secs(1) {
                 let seconds = diff.as_secs_f32();
                 self.fps = self.num_frames as f32 / seconds;
                 self.num_frames = 0;
-                self.last_fps_check_time = start;
+                self.last_fps_check_time = frame_start;
             }
         }
 
@@ -144,10 +147,29 @@ impl crate::TermWindow {
                 }
             }
         }
-        log::debug!("paint_impl before call_draw elapsed={:?}", start.elapsed());
+        log::debug!("paint_impl before call_draw elapsed={:?}", frame_start.elapsed());
 
         self.call_draw(frame).ok();
-        self.last_frame_duration = start.elapsed();
+        self.last_frame_duration = frame_start.elapsed();
+        
+        // Phase 15.1.C: Check frame budget
+        if self.last_frame_duration > self.frame_budget {
+            *self.budget_exceeded_count.borrow_mut() += 1;
+            
+            // Log budget exceeded periodically
+            let now = Instant::now();
+            let mut last_log = self.last_budget_exceeded_log.borrow_mut();
+            if now.duration_since(*last_log) >= Duration::from_secs(5) {
+                log::warn!(
+                    "Frame budget exceeded {} times in last 5s (budget: {:?}, avg frame: {:?})",
+                    self.budget_exceeded_count.borrow(),
+                    self.frame_budget,
+                    self.last_frame_duration
+                );
+                *self.budget_exceeded_count.borrow_mut() = 0;
+                *last_log = now;
+            }
+        }
         
         // Track frame times for variance analysis
         {
@@ -173,8 +195,8 @@ impl crate::TermWindow {
         // Log frame statistics every 5 seconds
         {
             let mut last_stats = self.last_frame_stats_log.borrow_mut();
-            if start.duration_since(*last_stats) >= Duration::from_secs(5) {
-                *last_stats = start;
+            if frame_start.duration_since(*last_stats) >= Duration::from_secs(5) {
+                *last_stats = frame_start;
                 
                 let frame_times = self.frame_times.borrow();
                 if frame_times.len() > 10 {

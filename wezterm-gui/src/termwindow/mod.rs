@@ -88,6 +88,35 @@ use prevcursor::PrevCursorPos;
 
 const ATLAS_SIZE: usize = 128;
 
+/// Frame rate mode for adaptive frame rate control (Phase 15.2)
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum FrameRateMode {
+    /// High frame rate (60 FPS, 16.67ms per frame) - for active usage
+    High,
+    /// Medium frame rate (30 FPS, 33.33ms per frame) - for moderate activity
+    Medium,
+    /// Low frame rate (10 FPS, 100ms per frame) - for idle/power saving
+    Low,
+}
+
+impl FrameRateMode {
+    fn target_frame_time(&self) -> Duration {
+        match self {
+            FrameRateMode::High => Duration::from_micros(16667),   // 60 FPS
+            FrameRateMode::Medium => Duration::from_micros(33333), // 30 FPS
+            FrameRateMode::Low => Duration::from_millis(100),      // 10 FPS
+        }
+    }
+    
+    fn fps(&self) -> u32 {
+        match self {
+            FrameRateMode::High => 60,
+            FrameRateMode::Medium => 30,
+            FrameRateMode::Low => 10,
+        }
+    }
+}
+
 lazy_static::lazy_static! {
     static ref WINDOW_CLASS: Mutex<String> = Mutex::new(wezterm_gui_subcommands::DEFAULT_WINDOW_CLASS.to_owned());
     static ref POSITION: Mutex<Option<GuiPosition>> = Mutex::new(None);
@@ -478,6 +507,16 @@ pub struct TermWindow {
     // Deferred texture atlas growth
     pending_texture_growth: RefCell<Option<usize>>,
     texture_growth_deferred_count: RefCell<usize>,
+    
+    // Frame budgeting (Phase 15.1.B)
+    frame_budget: Duration,
+    budget_exceeded_count: RefCell<usize>,
+    last_budget_exceeded_log: RefCell<Instant>,
+    
+    // Adaptive frame rate (Phase 15.2.A)
+    target_frame_time: RefCell<Duration>,
+    frame_rate_mode: RefCell<FrameRateMode>,
+    last_activity: RefCell<Instant>,
 
     connection_name: String,
 
@@ -572,6 +611,54 @@ impl TermWindow {
 
         self.update_title();
         self.emit_window_event("window-focus-changed", None);
+    }
+    
+    /// Track activity for adaptive frame rate (Phase 15.2.C)
+    fn mark_activity(&self) {
+        *self.last_activity.borrow_mut() = Instant::now();
+    }
+    
+    /// Update frame rate target based on activity and performance (Phase 15.2.B)
+    fn update_frame_rate_target(&self) {
+        let now = Instant::now();
+        let idle_time = now.duration_since(*self.last_activity.borrow());
+        
+        // Determine frame rate mode based on activity
+        let new_mode = if idle_time < Duration::from_millis(100) {
+            // Recent activity (< 100ms ago): high frame rate
+            FrameRateMode::High
+        } else if idle_time < Duration::from_secs(2) {
+            // Moderate activity (100ms - 2s ago): medium frame rate
+            FrameRateMode::Medium
+        } else {
+            // Idle (> 2s ago): low frame rate for power saving
+            FrameRateMode::Low
+        };
+        
+        // Also consider if we're consistently slow - drop to medium rate
+        let new_mode = if self.last_frame_duration > Duration::from_millis(30) {
+            // If frames are consistently slow, don't try to render at 60fps
+            match new_mode {
+                FrameRateMode::High => FrameRateMode::Medium,
+                other => other,
+            }
+        } else {
+            new_mode
+        };
+        
+        let current_mode = *self.frame_rate_mode.borrow();
+        if current_mode != new_mode {
+            log::info!(
+                "Adaptive frame rate: {:?} ({} fps) → {:?} ({} fps) (idle: {:?})",
+                current_mode,
+                current_mode.fps(),
+                new_mode,
+                new_mode.fps(),
+                idle_time
+            );
+            *self.frame_rate_mode.borrow_mut() = new_mode;
+            *self.target_frame_time.borrow_mut() = new_mode.target_frame_time();
+        }
     }
 
     fn created(&mut self, ctx: RenderContext) -> anyhow::Result<()> {
@@ -709,6 +796,14 @@ impl TermWindow {
             last_frame_stats_log: RefCell::new(Instant::now()),
             pending_texture_growth: RefCell::new(None),
             texture_growth_deferred_count: RefCell::new(0),
+            // Frame budgeting: 15ms budget (leave 1.67ms margin for 60fps)
+            frame_budget: Duration::from_millis(15),
+            budget_exceeded_count: RefCell::new(0),
+            last_budget_exceeded_log: RefCell::new(Instant::now()),
+            // Adaptive frame rate: start in high mode
+            target_frame_time: RefCell::new(FrameRateMode::High.target_frame_time()),
+            frame_rate_mode: RefCell::new(FrameRateMode::High),
+            last_activity: RefCell::new(Instant::now()),
             config_subscription: None,
             os_parameters: None,
             gl: None,
@@ -970,6 +1065,7 @@ impl TermWindow {
                 Ok(true)
             }
             WindowEvent::MouseEvent(event) => {
+                self.mark_activity(); // Phase 15.2.C: Track mouse activity
                 self.mouse_event_impl(event, window);
                 Ok(true)
             }
@@ -1009,6 +1105,7 @@ impl TermWindow {
                 Ok(true)
             }
             WindowEvent::KeyEvent(event) => {
+                self.mark_activity(); // Phase 15.2.C: Track keyboard activity
                 self.key_event_impl(event, window);
                 Ok(true)
             }
@@ -1313,6 +1410,7 @@ impl TermWindow {
                     }
                 }
                 MuxNotification::PaneOutput(pane_id) => {
+                    self.mark_activity(); // Phase 15.2.C: Track terminal output activity
                     self.mux_pane_output_event(pane_id);
                 }
                 MuxNotification::WindowInvalidated(_) => {

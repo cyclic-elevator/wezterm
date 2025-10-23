@@ -54,7 +54,7 @@ use crate::wayland::WaylandConnection;
 use crate::x11::KeyboardWithFallback;
 use crate::{
     Appearance, Clipboard, Connection, ConnectionOps, Dimensions, MouseCursor, Point, Rect,
-    RequestedWindowGeometry, ResizeIncrement, ResolvedGeometry, Window, WindowEvent,
+    RequestedWindowGeometry, ResizeIncrement, ResolvedGeometry, Size, Window, WindowEvent,
     WindowEventSender, WindowKeyEvent, WindowOps, WindowState,
 };
 
@@ -1229,10 +1229,10 @@ impl WaylandWindowInner {
     pub fn mark_all_dirty(&self) {
         let rect = Rect {
             origin: Point::new(0, 0),
-            size: Size {
-                width: self.dimensions.pixel_width as isize,
-                height: self.dimensions.pixel_height as isize,
-            },
+            size: Size::new(
+                self.dimensions.pixel_width as isize,
+                self.dimensions.pixel_height as isize,
+            ),
         };
         self.mark_dirty(rect);
     }

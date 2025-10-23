@@ -362,6 +362,17 @@ enum EventState {
     InProgressWithQueued(Option<PaneId>),
 }
 
+/// Cache for TabBarState to avoid recomputation on every frame
+struct CachedTabBar {
+    state: TabBarState,
+    width: usize,
+    tabs_hash: u64,
+    config_generation: usize,
+    left_status: String,
+    right_status: String,
+    mouse_x: Option<usize>,
+}
+
 pub struct TermWindow {
     pub window: Option<Window>,
     pub config: ConfigHandle,
@@ -390,6 +401,8 @@ pub struct TermWindow {
     show_tab_bar: bool,
     show_scroll_bar: bool,
     tab_bar: TabBarState,
+    cached_tab_bar: Option<CachedTabBar>,
+    tabs_version: usize,
     fancy_tab_bar: Option<box_model::ComputedElement>,
     pub right_status: String,
     pub left_status: String,
@@ -711,6 +724,8 @@ impl TermWindow {
             show_tab_bar,
             show_scroll_bar: config.enable_scroll_bar,
             tab_bar: TabBarState::default(),
+            cached_tab_bar: None,
+            tabs_version: 0,
             fancy_tab_bar: None,
             right_status: String::new(),
             left_status: String::new(),
@@ -1254,6 +1269,10 @@ impl TermWindow {
                     window_id: _,
                     tab_id,
                 } => {
+                    // Invalidate tab bar cache when tabs change
+                    self.tabs_version += 1;
+                    self.cached_tab_bar = None;
+                    
                     let mux = Mux::get();
                     let mut size = self.terminal_size;
                     if let Some(tab) = mux.get_tab(tab_id) {
@@ -1731,6 +1750,7 @@ impl TermWindow {
         
         // Invalidate all caches on config reload
         crate::callback_cache::invalidate_all_caches();
+        self.cached_tab_bar = None;
         
         self.key_table_state.clear_stack();
         self.connection_name = Connection::get().unwrap().name();
@@ -1994,20 +2014,71 @@ impl TermWindow {
             None => false,
         };
 
-        let new_tab_bar = TabBarState::new(
-            self.dimensions.pixel_width / self.render_metrics.cell_size.width as usize,
-            if hovering_in_tab_bar {
-                Some(self.last_mouse_coords.0)
-            } else {
-                None
-            },
-            &tabs,
-            &panes,
-            self.config.resolved_palette.tab_bar.as_ref(),
-            &self.config,
-            &self.left_status,
-            &self.right_status,
-        );
+        let mouse_x = if hovering_in_tab_bar {
+            Some(self.last_mouse_coords.0)
+        } else {
+            None
+        };
+        
+        let width = self.dimensions.pixel_width / self.render_metrics.cell_size.width as usize;
+        
+        // Compute hash of tab state for cache key
+        use std::collections::hash_map::DefaultHasher;
+        use std::hash::{Hash, Hasher};
+        let mut hasher = DefaultHasher::new();
+        self.tabs_version.hash(&mut hasher);
+        for tab in &tabs {
+            tab.tab_id.hash(&mut hasher);
+            tab.tab_index.hash(&mut hasher);
+            tab.is_active.hash(&mut hasher);
+            tab.tab_title.hash(&mut hasher);
+        }
+        let tabs_hash = hasher.finish();
+        
+        // Check cache
+        let cache_hit = if let Some(cached) = &self.cached_tab_bar {
+            cached.width == width &&
+            cached.tabs_hash == tabs_hash &&
+            cached.config_generation == self.config.generation() &&
+            cached.left_status == self.left_status &&
+            cached.right_status == self.right_status &&
+            cached.mouse_x == mouse_x
+        } else {
+            false
+        };
+        
+        let new_tab_bar = if cache_hit {
+            // Cache hit - reuse cached tab bar
+            log::trace!("Tab bar cache hit");
+            self.cached_tab_bar.as_ref().unwrap().state.clone()
+        } else {
+            // Cache miss - compute new tab bar
+            log::trace!("Tab bar cache miss - recomputing");
+            let state = TabBarState::new(
+                width,
+                mouse_x,
+                &tabs,
+                &panes,
+                self.config.resolved_palette.tab_bar.as_ref(),
+                &self.config,
+                &self.left_status,
+                &self.right_status,
+            );
+            
+            // Update cache
+            self.cached_tab_bar = Some(CachedTabBar {
+                state: state.clone(),
+                width,
+                tabs_hash,
+                config_generation: self.config.generation(),
+                left_status: self.left_status.clone(),
+                right_status: self.right_status.clone(),
+                mouse_x,
+            });
+            
+            state
+        };
+        
         if new_tab_bar != self.tab_bar {
             self.tab_bar = new_tab_bar;
             self.invalidate_fancy_tab_bar();

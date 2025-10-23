@@ -52,6 +52,7 @@ mod shapecache;
 mod spawn;
 mod stats;
 mod callback_cache;
+mod lua_ser_cache;
 mod tab_title_cache;
 mod tabbar;
 mod termwindow;

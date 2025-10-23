@@ -228,6 +228,8 @@ pub fn invalidate_all_caches() {
     invalidate_status_cache();
     // Also invalidate tab title cache
     crate::tab_title_cache::invalidate_tab_title_cache();
+    // And Lua serialization caches
+    crate::lua_ser_cache::invalidate_all_lua_caches();
 }
 
 /// Generate a sensible default window title

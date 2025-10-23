@@ -52,8 +52,22 @@ fn call_format_tab_title(
 ) -> Option<TitleText> {
     match config::run_immediate_with_lua_config(|lua| {
         if let Some(lua) = lua {
-            let tabs = lua.create_sequence_from(tab_info.iter().cloned())?;
-            let panes = lua.create_sequence_from(pane_info.iter().cloned())?;
+            // Use cached Lua table serialization
+            let start = std::time::Instant::now();
+            let tabs = crate::lua_ser_cache::get_tabs_as_lua_sequence(&lua, tab_info)?;
+            let tabs_elapsed = start.elapsed();
+            
+            let start = std::time::Instant::now();
+            let panes = crate::lua_ser_cache::get_panes_as_lua_sequence(&lua, pane_info)?;
+            let panes_elapsed = start.elapsed();
+            
+            log::debug!(
+                "Lua serialization (cached): tabs={} in {:?}, panes={} in {:?}",
+                tab_info.len(),
+                tabs_elapsed,
+                pane_info.len(),
+                panes_elapsed
+            );
 
             let v = config::lua::emit_sync_callback(
                 &*lua,

@@ -324,6 +324,9 @@ impl WaylandWindow {
             text_cursor: None,
             appearance,
 
+            paint_throttled: false,
+            last_paint: Instant::now(),
+
             config,
 
             title: None,
@@ -584,6 +587,8 @@ pub struct WaylandWindowInner {
     pending_first_configure: Option<async_channel::Sender<()>>,
     frame_callback: Option<WlCallback>,
     invalidated: bool,
+    paint_throttled: bool,
+    last_paint: Instant,
     // font_config: Rc<FontConfiguration>,
     text_cursor: Option<Rect>,
     appearance: Appearance,
@@ -1080,6 +1085,12 @@ impl WaylandWindowInner {
             return Ok(());
         }
 
+        // Add throttling similar to macOS/Windows
+        if self.paint_throttled {
+            self.invalidated = true;
+            return Ok(());
+        }
+
         if self.frame_callback.is_some() {
             // Painting now won't be productive, so skip it but
             // remember that we need to be painted so that when
@@ -1107,6 +1118,21 @@ impl WaylandWindowInner {
         // <https://github.com/wezterm/wezterm/issues/3468>
         // <https://github.com/wezterm/wezterm/issues/3126>
         self.events.dispatch(WindowEvent::NeedRepaint);
+
+        self.paint_throttled = true;
+        let window_id = SurfaceUserData::from_wl(self.surface()).window_id;
+
+        // Reset throttle after frame time (16ms for 60fps)
+        promise::spawn::spawn(async move {
+            async_io::Timer::after(Duration::from_millis(16)).await;
+            WaylandConnection::with_window_inner(window_id, |inner| {
+                inner.paint_throttled = false;
+                if inner.invalidated {
+                    inner.do_paint().ok();
+                }
+                Ok(())
+            });
+        }).detach();
 
         Ok(())
     }

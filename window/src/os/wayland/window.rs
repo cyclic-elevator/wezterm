@@ -329,6 +329,7 @@ impl WaylandWindow {
             resize_throttled: false,
             last_resize: Instant::now(),
             pending_resize: None,
+            dirty_regions: RefCell::new(Vec::new()),
 
             config,
 
@@ -595,6 +596,8 @@ pub struct WaylandWindowInner {
     resize_throttled: bool,
     last_resize: Instant,
     pending_resize: Option<(u32, u32)>,
+    // Track dirty regions for damage tracking
+    dirty_regions: RefCell<Vec<Rect>>,
     // font_config: Rc<FontConfiguration>,
     text_cursor: Option<Rect>,
     appearance: Appearance,
@@ -1156,6 +1159,34 @@ impl WaylandWindowInner {
         log::trace!("do_paint - callback: {:?}", callback);
         self.frame_callback.replace(callback);
 
+        // Send damage regions to compositor for efficient rendering
+        let dirty_regions = self.dirty_regions.borrow_mut().drain(..).collect::<Vec<_>>();
+        
+        if !dirty_regions.is_empty() {
+            // Tell compositor exactly what changed
+            for rect in &dirty_regions {
+                let x = rect.origin.x.max(0) as i32;
+                let y = rect.origin.y.max(0) as i32;
+                let width = rect.size.width.max(0) as i32;
+                let height = rect.size.height.max(0) as i32;
+                
+                if width > 0 && height > 0 {
+                    self.surface().damage_buffer(x, y, width, height);
+                }
+            }
+            log::debug!("Sent {} damage regions to Wayland compositor", dirty_regions.len());
+        } else {
+            // No explicit damage - mark entire window as damaged
+            // (This is the fallback for when we haven't tracked damage yet)
+            self.surface().damage_buffer(
+                0,
+                0,
+                self.dimensions.pixel_width as i32,
+                self.dimensions.pixel_height as i32,
+            );
+            log::trace!("No damage regions - marking entire window dirty");
+        }
+
         // The repaint has the side of effect of committing the surface,
         // which is necessary for the frame callback to get triggered.
         // Ordering the repaint after requesting the callback ensures that
@@ -1187,6 +1218,23 @@ impl WaylandWindowInner {
             .as_ref()
             .expect("Window should exist")
             .wl_surface()
+    }
+
+    /// Mark a region as dirty for damage tracking
+    pub fn mark_dirty(&self, rect: Rect) {
+        self.dirty_regions.borrow_mut().push(rect);
+    }
+
+    /// Mark the entire window as dirty
+    pub fn mark_all_dirty(&self) {
+        let rect = Rect {
+            origin: Point::new(0, 0),
+            size: Size {
+                width: self.dimensions.pixel_width as isize,
+                height: self.dimensions.pixel_height as isize,
+            },
+        };
+        self.mark_dirty(rect);
     }
 
     pub(crate) fn next_frame_is_ready(&mut self) {

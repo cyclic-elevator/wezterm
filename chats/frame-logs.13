@@ -1,0 +1,154 @@
+02:51:29.876  WARN   wezterm_gui::termwindow::render::paint > SLOW FRAME: 25.959315ms (25.0ms, target: 16.67ms for 60fps)
+02:51:29.930  WARN   wezterm_gui::termwindow::render::paint > Texture atlas out of space (need 256, current 128). Deferring growth to next frame (deferred 1 times). Rendering with degraded quality Scale(2) this frame.
+02:51:29.949  INFO   wezterm_gui::termwindow::render::paint > Applying deferred texture atlas growth to 256 (deferred 1 times)
+02:51:29.950  INFO   wezterm_gui::termwindow::render::paint > Texture atlas growth completed in 1.01629ms
+02:51:30.243  INFO   window::os::wayland::window            > Frame callback completed after 136.315788ms wait (stall resolved)
+02:51:30.476  WARN   wezterm_gui::termwindow::render::paint > SLOW FRAME: 65.424835ms (65.0ms, target: 16.67ms for 60fps)
+02:51:30.547  WARN   wezterm_gui::termwindow::render::paint > SLOW FRAME: 27.547861ms (27.0ms, target: 16.67ms for 60fps)
+02:51:30.685  INFO   window::os::wayland::window            > Frame callback completed after 165.938969ms wait (stall resolved)
+02:51:30.753  WARN   wezterm_gui::termwindow::render::paint > SLOW FRAME: 43.146008ms (43.0ms, target: 16.67ms for 60fps)
+02:51:30.794  WARN   wezterm_gui::termwindow::render::paint > SLOW FRAME: 22.899761ms (22.0ms, target: 16.67ms for 60fps)
+02:51:35.110  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 18): avg=15.2ms, median=5.1ms, min=2.3ms, max=65.4ms, p95=65.4ms, p99=65.4ms, variance=63.1ms
+02:51:38.119  INFO   window::os::wayland::window            > Frame callback completed after 138.566822ms wait (stall resolved)
+02:51:38.607  INFO   window::os::wayland::window            > Frame callback completed after 212.550572ms wait (stall resolved)
+02:51:39.239  INFO   window::os::wayland::window            > Frame callback completed after 250.540334ms wait (stall resolved)
+02:51:40.124  INFO   window::os::wayland::window            > Frame callback completed after 304.71356ms wait (stall resolved)
+02:51:40.815  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 33): avg=12.5ms, median=8.7ms, min=2.3ms, max=65.4ms, p95=43.1ms, p99=65.4ms, variance=63.1ms
+02:51:41.199  INFO   window::os::wayland::window            > Frame callback completed after 394.614829ms wait (stall resolved)
+02:51:42.433  INFO   window::os::wayland::window            > Frame callback completed after 428.684277ms wait (stall resolved)
+02:51:43.788  INFO   window::os::wayland::window            > Frame callback completed after 531.179939ms wait (stall resolved)
+02:51:45.073  INFO   window::os::wayland::window            > Frame callback completed after 468.684061ms wait (stall resolved)
+02:51:45.867  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 37): avg=12.2ms, median=9.1ms, min=2.3ms, max=65.4ms, p95=43.1ms, p99=65.4ms, variance=63.1ms
+02:51:46.295  INFO   window::os::wayland::window            > Frame callback completed after 438.121762ms wait (stall resolved)
+02:51:47.579  INFO   window::os::wayland::window            > Frame callback completed after 468.93101ms wait (stall resolved)
+02:51:48.969  INFO   window::os::wayland::window            > Frame callback completed after 467.844673ms wait (stall resolved)
+02:51:50.608  INFO   window::os::wayland::window            > Frame callback completed after 603.091931ms wait (stall resolved)
+02:51:51.640  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 41): avg=12.1ms, median=9.1ms, min=2.3ms, max=65.4ms, p95=27.5ms, p99=65.4ms, variance=63.1ms
+02:51:52.208  INFO   window::os::wayland::window            > Frame callback completed after 575.512015ms wait (stall resolved)
+02:51:53.864  INFO   window::os::wayland::window            > Frame callback completed after 587.500908ms wait (stall resolved)
+02:51:55.430  INFO   window::os::wayland::window            > Frame callback completed after 489.844494ms wait (stall resolved)
+02:51:56.799  INFO   window::os::wayland::window            > Frame callback completed after 405.974478ms wait (stall resolved)
+02:51:57.710  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 45): avg=11.9ms, median=9.1ms, min=2.3ms, max=65.4ms, p95=27.5ms, p99=65.4ms, variance=63.1ms
+02:51:58.084  INFO   window::os::wayland::window            > Frame callback completed after 378.304329ms wait (stall resolved)
+02:51:59.199  INFO   window::os::wayland::window            > Frame callback completed after 331.671356ms wait (stall resolved)
+02:52:00.173  INFO   window::os::wayland::window            > Frame callback completed after 339.335082ms wait (stall resolved)
+02:52:01.063  INFO   window::os::wayland::window            > Frame callback completed after 291.793859ms wait (stall resolved)
+02:52:01.907  INFO   window::os::wayland::window            > Frame callback completed after 283.604179ms wait (stall resolved)
+02:52:02.640  INFO   window::os::wayland::window            > Frame callback completed after 280.683533ms wait (stall resolved)
+02:52:03.035  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 51): avg=11.2ms, median=8.7ms, min=2.3ms, max=65.4ms, p95=27.5ms, p99=65.4ms, variance=63.1ms
+02:52:03.234  INFO   window::os::wayland::window            > Frame callback completed after 203.399216ms wait (stall resolved)
+02:52:03.859  INFO   window::os::wayland::window            > Frame callback completed after 225.422783ms wait (stall resolved)
+02:52:04.421  INFO   window::os::wayland::window            > Frame callback completed after 153.330329ms wait (stall resolved)
+02:52:04.950  INFO   window::os::wayland::window            > Frame callback completed after 158.048477ms wait (stall resolved)
+02:52:05.412  INFO   window::os::wayland::window            > Frame callback completed after 141.601444ms wait (stall resolved)
+02:52:05.856  INFO   window::os::wayland::window            > Frame callback completed after 121.008518ms wait (stall resolved)
+02:52:23.573  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 61): avg=10.1ms, median=7.3ms, min=2.3ms, max=65.4ms, p95=26.0ms, p99=65.4ms, variance=63.1ms
+02:52:26.452  INFO   window::os::wayland::window            > Frame callback completed after 264.581991ms wait (stall resolved)
+02:52:27.250  INFO   window::os::wayland::window            > Frame callback completed after 295.390052ms wait (stall resolved)
+02:52:28.212  INFO   window::os::wayland::window            > Frame callback completed after 341.075597ms wait (stall resolved)
+02:52:28.882  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 73): avg=10.0ms, median=8.2ms, min=2.3ms, max=65.4ms, p95=26.0ms, p99=65.4ms, variance=63.1ms
+02:52:29.256  INFO   window::os::wayland::window            > Frame callback completed after 383.481945ms wait (stall resolved)
+02:52:30.223  INFO   window::os::wayland::window            > Frame callback completed after 292.402921ms wait (stall resolved)
+02:52:31.281  INFO   window::os::wayland::window            > Frame callback completed after 423.371315ms wait (stall resolved)
+02:52:32.208  INFO   window::os::wayland::window            > Frame callback completed after 311.228025ms wait (stall resolved)
+02:52:33.151  INFO   window::os::wayland::window            > Frame callback completed after 276.782216ms wait (stall resolved)
+02:52:33.957  INFO   window::os::wayland::window            > Frame callback completed after 219.262121ms wait (stall resolved)
+02:52:34.466  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 79): avg=9.7ms, median=7.7ms, min=2.3ms, max=65.4ms, p95=26.0ms, p99=65.4ms, variance=63.1ms
+02:52:34.674  INFO   window::os::wayland::window            > Frame callback completed after 211.685063ms wait (stall resolved)
+02:52:35.330  INFO   window::os::wayland::window            > Frame callback completed after 221.674621ms wait (stall resolved)
+02:52:35.968  INFO   window::os::wayland::window            > Frame callback completed after 208.740673ms wait (stall resolved)
+02:52:36.694  INFO   window::os::wayland::window            > Frame callback completed after 242.632034ms wait (stall resolved)
+02:52:37.350  INFO   window::os::wayland::window            > Frame callback completed after 211.625701ms wait (stall resolved)
+02:52:37.888  INFO   window::os::wayland::window            > Frame callback completed after 140.95439ms wait (stall resolved)
+02:52:38.353  INFO   window::os::wayland::window            > Frame callback completed after 127.633397ms wait (stall resolved)
+02:52:38.719  INFO   window::os::wayland::window            > Frame callback completed after 106.14172ms wait (stall resolved)
+02:52:39.528  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 89): avg=9.2ms, median=6.0ms, min=2.3ms, max=65.4ms, p95=22.9ms, p99=65.4ms, variance=63.1ms
+02:52:40.516  INFO   window::os::wayland::window            > Frame callback completed after 119.291748ms wait (stall resolved)
+02:52:41.058  INFO   window::os::wayland::window            > Frame callback completed after 106.860009ms wait (stall resolved)
+02:52:43.430  INFO   window::os::wayland::window            > Frame callback completed after 118.842966ms wait (stall resolved)
+02:52:43.727  INFO   window::os::wayland::window            > Frame callback completed after 122.940181ms wait (stall resolved)
+02:52:44.003  INFO   window::os::wayland::window            > Frame callback completed after 100.41678ms wait (stall resolved)
+02:52:44.674  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 108): avg=8.2ms, median=5.1ms, min=2.3ms, max=65.4ms, p95=20.1ms, p99=43.1ms, variance=63.1ms
+02:52:55.906  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 112): avg=8.1ms, median=5.0ms, min=2.3ms, max=65.4ms, p95=20.1ms, p99=43.1ms, variance=63.1ms
+02:53:01.930  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.7ms, median=5.1ms, min=2.9ms, max=20.1ms, p95=13.8ms, p99=19.9ms, variance=17.2ms
+02:53:08.700  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.8ms, median=5.1ms, min=2.9ms, max=20.1ms, p95=13.8ms, p99=19.9ms, variance=17.2ms
+02:53:10.565  INFO   window::os::wayland::window            > Frame callback completed after 126.859307ms wait (stall resolved)
+02:53:11.106  INFO   window::os::wayland::window            > Frame callback completed after 205.797469ms wait (stall resolved)
+02:53:11.963  INFO   window::os::wayland::window            > Frame callback completed after 396.570236ms wait (stall resolved)
+02:53:12.974  INFO   window::os::wayland::window            > Frame callback completed after 385.163097ms wait (stall resolved)
+02:53:13.886  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.9ms, median=5.2ms, min=2.9ms, max=20.1ms, p95=14.0ms, p99=19.9ms, variance=17.2ms
+02:53:14.263  INFO   window::os::wayland::window            > Frame callback completed after 386.292176ms wait (stall resolved)
+02:53:15.666  INFO   window::os::wayland::window            > Frame callback completed after 454.647154ms wait (stall resolved)
+02:53:17.277  INFO   window::os::wayland::window            > Frame callback completed after 582.455077ms wait (stall resolved)
+02:53:19.141  INFO   window::os::wayland::window            > Frame callback completed after 650.686581ms wait (stall resolved)
+02:53:20.484  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.8ms, median=5.2ms, min=2.9ms, max=19.9ms, p95=13.8ms, p99=18.0ms, variance=17.0ms
+02:53:21.159  INFO   window::os::wayland::window            > Frame callback completed after 684.989919ms wait (stall resolved)
+02:53:23.433  INFO   window::os::wayland::window            > Frame callback completed after 776.368132ms wait (stall resolved)
+02:53:25.858  INFO   window::os::wayland::window            > Frame callback completed after 835.159776ms wait (stall resolved)
+02:53:27.476  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.9ms, median=5.2ms, min=2.9ms, max=19.9ms, p95=13.8ms, p99=18.0ms, variance=17.0ms
+02:53:28.322  INFO   window::os::wayland::window            > Frame callback completed after 854.72454ms wait (stall resolved)
+02:53:30.763  INFO   window::os::wayland::window            > Frame callback completed after 844.732607ms wait (stall resolved)
+02:53:33.281  INFO   window::os::wayland::window            > Frame callback completed after 837.375193ms wait (stall resolved)
+02:53:34.963  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.8ms, median=5.2ms, min=2.9ms, max=19.9ms, p95=13.3ms, p99=18.0ms, variance=17.0ms
+02:53:35.850  INFO   window::os::wayland::window            > Frame callback completed after 897.775568ms wait (stall resolved)
+02:53:38.397  INFO   window::os::wayland::window            > Frame callback completed after 916.855931ms wait (stall resolved)
+02:53:39.967  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.7ms, median=5.2ms, min=2.9ms, max=18.0ms, p95=13.3ms, p99=14.5ms, variance=15.1ms
+02:53:40.842  INFO   window::os::wayland::window            > Frame callback completed after 883.634182ms wait (stall resolved)
+02:53:43.520  INFO   window::os::wayland::window            > Frame callback completed after 954.095349ms wait (stall resolved)
+02:53:45.278  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.8ms, median=5.4ms, min=2.9ms, max=18.0ms, p95=13.3ms, p99=14.5ms, variance=15.1ms
+02:53:46.188  INFO   window::os::wayland::window            > Frame callback completed after 917.727375ms wait (stall resolved)
+02:53:48.617  INFO   window::os::wayland::window            > Frame callback completed after 802.585081ms wait (stall resolved)
+02:53:50.436  INFO   window::os::wayland::window            > Frame callback completed after 561.97969ms wait (stall resolved)
+02:53:51.535  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.8ms, median=5.3ms, min=2.9ms, max=18.0ms, p95=13.3ms, p99=14.5ms, variance=15.1ms
+02:53:52.076  INFO   window::os::wayland::window            > Frame callback completed after 545.619327ms wait (stall resolved)
+02:53:53.614  INFO   window::os::wayland::window            > Frame callback completed after 474.28434ms wait (stall resolved)
+02:53:55.025  INFO   window::os::wayland::window            > Frame callback completed after 480.029463ms wait (stall resolved)
+02:53:56.214  INFO   window::os::wayland::window            > Frame callback completed after 388.046938ms wait (stall resolved)
+02:53:56.980  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.8ms, median=5.3ms, min=2.9ms, max=18.0ms, p95=13.3ms, p99=14.5ms, variance=15.1ms
+02:53:57.369  INFO   window::os::wayland::window            > Frame callback completed after 393.564108ms wait (stall resolved)
+02:53:58.467  INFO   window::os::wayland::window            > Frame callback completed after 373.937608ms wait (stall resolved)
+02:53:59.425  INFO   window::os::wayland::window            > Frame callback completed after 347.72897ms wait (stall resolved)
+02:54:00.337  INFO   window::os::wayland::window            > Frame callback completed after 315.687351ms wait (stall resolved)
+02:54:01.217  INFO   window::os::wayland::window            > Frame callback completed after 296.132086ms wait (stall resolved)
+02:54:02.048  INFO   window::os::wayland::window            > Frame callback completed after 300.348026ms wait (stall resolved)
+02:54:02.573  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.7ms, median=5.3ms, min=2.9ms, max=18.0ms, p95=13.3ms, p99=14.5ms, variance=15.1ms
+02:54:02.870  INFO   window::os::wayland::window            > Frame callback completed after 301.966254ms wait (stall resolved)
+02:54:03.696  INFO   window::os::wayland::window            > Frame callback completed after 300.007284ms wait (stall resolved)
+02:54:04.467  INFO   window::os::wayland::window            > Frame callback completed after 256.272398ms wait (stall resolved)
+02:54:05.272  INFO   window::os::wayland::window            > Frame callback completed after 264.381345ms wait (stall resolved)
+02:54:06.136  INFO   window::os::wayland::window            > Frame callback completed after 291.97076ms wait (stall resolved)
+02:54:07.012  INFO   window::os::wayland::window            > Frame callback completed after 293.318293ms wait (stall resolved)
+02:54:07.586  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.7ms, median=5.1ms, min=2.9ms, max=18.0ms, p95=13.3ms, p99=14.5ms, variance=15.1ms
+02:54:07.892  INFO   window::os::wayland::window            > Frame callback completed after 308.649308ms wait (stall resolved)
+02:54:08.782  INFO   window::os::wayland::window            > Frame callback completed after 298.091056ms wait (stall resolved)
+02:54:09.528  INFO   window::os::wayland::window            > Frame callback completed after 245.35797ms wait (stall resolved)
+02:54:10.203  INFO   window::os::wayland::window            > Frame callback completed after 206.033733ms wait (stall resolved)
+02:54:10.889  INFO   window::os::wayland::window            > Frame callback completed after 221.818279ms wait (stall resolved)
+02:54:11.549  INFO   window::os::wayland::window            > Frame callback completed after 218.940374ms wait (stall resolved)
+02:54:12.183  INFO   window::os::wayland::window            > Frame callback completed after 198.394939ms wait (stall resolved)
+02:54:12.608  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.2ms, median=4.9ms, min=2.9ms, max=14.5ms, p95=13.1ms, p99=14.0ms, variance=11.6ms
+02:54:12.798  INFO   window::os::wayland::window            > Frame callback completed after 193.895246ms wait (stall resolved)
+02:54:13.410  INFO   window::os::wayland::window            > Frame callback completed after 193.920177ms wait (stall resolved)
+02:54:14.052  INFO   window::os::wayland::window            > Frame callback completed after 231.744912ms wait (stall resolved)
+02:54:14.689  INFO   window::os::wayland::window            > Frame callback completed after 214.63539ms wait (stall resolved)
+02:54:15.234  INFO   window::os::wayland::window            > Frame callback completed after 166.968318ms wait (stall resolved)
+02:54:15.668  INFO   window::os::wayland::window            > Frame callback completed after 114.644835ms wait (stall resolved)
+02:54:17.757  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.0ms, median=4.8ms, min=2.9ms, max=14.5ms, p95=13.1ms, p99=14.0ms, variance=11.6ms
+02:54:19.292  INFO   window::os::wayland::window            > Frame callback completed after 109.96824ms wait (stall resolved)
+02:54:34.321  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.0ms, median=4.8ms, min=3.1ms, max=14.5ms, p95=13.1ms, p99=14.0ms, variance=11.4ms
+02:54:37.613  INFO   window::os::wayland::window            > Frame callback completed after 110.50013ms wait (stall resolved)
+02:54:37.988  INFO   window::os::wayland::window            > Frame callback completed after 150.429866ms wait (stall resolved)
+02:54:38.386  INFO   window::os::wayland::window            > Frame callback completed after 144.490033ms wait (stall resolved)
+02:54:39.241  INFO   window::os::wayland::window            > Frame callback completed after 353.447973ms wait (stall resolved)
+02:54:39.931  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.6ms, median=5.1ms, min=3.1ms, max=14.5ms, p95=13.3ms, p99=14.0ms, variance=11.4ms
+02:54:40.336  INFO   window::os::wayland::window            > Frame callback completed after 413.984882ms wait (stall resolved)
+02:54:41.598  INFO   window::os::wayland::window            > Frame callback completed after 391.893642ms wait (stall resolved)
+02:54:42.747  INFO   window::os::wayland::window            > Frame callback completed after 348.50306ms wait (stall resolved)
+02:54:43.753  INFO   window::os::wayland::window            > Frame callback completed after 335.51331ms wait (stall resolved)
+02:54:44.703  INFO   window::os::wayland::window            > Frame callback completed after 286.187644ms wait (stall resolved)
+02:54:45.295  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.5ms, median=5.0ms, min=3.1ms, max=14.5ms, p95=13.3ms, p99=14.0ms, variance=11.4ms
+02:54:45.496  INFO   window::os::wayland::window            > Frame callback completed after 206.655855ms wait (stall resolved)
+02:54:50.715  INFO   wezterm_gui::termwindow::render::paint > Frame time stats (last 120): avg=6.5ms, median=5.0ms, min=3.1ms, max=14.5ms, p95=13.3ms, p99=14.0ms, variance=11.4ms
+02:54:50.901  INFO   window::os::wayland::window            > Frame callback completed after 189.741042ms wait (stall resolved)
+02:54:51.514  INFO   window::os::wayland::window            > Frame callback completed after 200.983154ms wait (stall resolved)
+02:54:51.913  INFO   window::os::wayland::window            > Frame callback completed after 106.757905ms wait (stall resolved)

@@ -908,7 +908,8 @@ impl WaylandWindowInner {
         if let Some((mut w, mut h)) = pending.configure.take() {
             // Check if we should throttle this resize event
             let now = Instant::now();
-            let throttle_duration = Duration::from_millis(16); // 16ms = ~60fps
+            // Phase 18: Reduce resize frequency to 33ms (~30fps max) to reduce GPU load
+            let throttle_duration = Duration::from_millis(33); // 33ms = ~30fps (was 16ms/60fps)
             
             if now.duration_since(self.last_resize) < throttle_duration {
                 // Too soon since last resize - accumulate this change (event coalescing!)

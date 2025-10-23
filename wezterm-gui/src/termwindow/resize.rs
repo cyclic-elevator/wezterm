@@ -46,6 +46,10 @@ impl super::TermWindow {
             log::trace!("dimensions didn't change NOP!");
             return;
         }
+        
+        // Phase 18: Track resize time for tab bar update optimization
+        self.last_resize_time = std::time::Instant::now();
+        
         let last_state = self.window_state;
         self.window_state = window_state;
         self.quad_generation += 1;

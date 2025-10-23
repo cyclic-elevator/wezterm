@@ -416,6 +416,8 @@ pub struct TermWindow {
     pub resizes_pending: usize,
     is_repaint_pending: bool,
     pending_scale_changes: LinkedList<resize::ScaleChange>,
+    /// Phase 18: Track last resize time to skip tab bar updates during fast resize
+    last_resize_time: Instant,
     /// Terminal dimensions
     terminal_size: TerminalSize,
     pub mux_window_id: MuxWindowId,
@@ -824,6 +826,7 @@ impl TermWindow {
             resizes_pending: 0,
             is_repaint_pending: false,
             pending_scale_changes: LinkedList::new(),
+            last_resize_time: Instant::now(),
             terminal_size,
             render_state,
             input_map: InputMap::new(&config),
@@ -2101,6 +2104,11 @@ impl TermWindow {
             Some(window) => window,
             _ => return,
         };
+        
+        // Phase 18: Skip tab bar updates during fast resize to reduce GPU load
+        // If we're resizing rapidly (< 100ms since last resize), use cached tab bar
+        let fast_resize_in_progress = self.last_resize_time.elapsed() < std::time::Duration::from_millis(100);
+        
         let tabs = self.get_tab_information();
         let panes = self.get_pane_information();
         let active_tab = tabs.iter().find(|t| t.is_active).cloned();
@@ -2158,9 +2166,17 @@ impl TermWindow {
             false
         };
         
-        let new_tab_bar = if cache_hit {
+        // Phase 18: Force cache usage during fast resize, even if cache is invalid
+        // This prevents expensive tab bar recomputation during rapid resize events
+        let force_cache = fast_resize_in_progress && self.cached_tab_bar.is_some();
+        
+        let new_tab_bar = if cache_hit || force_cache {
             // Cache hit - reuse cached tab bar
-            log::trace!("Tab bar cache hit");
+            if force_cache && !cache_hit {
+                log::trace!("Tab bar cache: forcing cached state during fast resize");
+            } else {
+                log::trace!("Tab bar cache hit");
+            }
             self.cached_tab_bar.as_ref().unwrap().state.clone()
         } else {
             // Cache miss - compute new tab bar

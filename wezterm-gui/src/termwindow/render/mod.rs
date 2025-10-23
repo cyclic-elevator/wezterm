@@ -664,11 +664,15 @@ impl crate::TermWindow {
 
         let fg_color = self.ensure_min_contrast(fg_color, bg_color);
 
+        // Phase 18: Disable cursor blinking during fast resize to reduce GPU load
+        let fast_resize_in_progress = self.last_resize_time.elapsed() < std::time::Duration::from_millis(100);
+        
         let blinking = params.cursor.is_some()
             && params.is_active_pane
             && cursor_shape.is_blinking()
             && params.config.cursor_blink_rate != 0
-            && self.focused.is_some();
+            && self.focused.is_some()
+            && !fast_resize_in_progress; // Disable blinking during fast resize
 
         let mut fg_color_alt = fg_color;
         let bg_color_alt = bg_color;

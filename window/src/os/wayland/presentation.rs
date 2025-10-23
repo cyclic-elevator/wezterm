@@ -28,17 +28,16 @@ pub struct PresentationFeedback {
 
 bitflags::bitflags! {
     /// Flags from wp_presentation_feedback
-    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     pub struct PresentationFlags: u32 {
         /// The presentation was synchronized to the "vertical retrace" by the display hardware
         const VSYNC = 0x1;
-        
+
         /// The display hardware provided measurements that the hardware driver converted into a presentation timestamp
         const HW_CLOCK = 0x2;
-        
+
         /// The display hardware signaled that it started using the new image content
         const HW_COMPLETION = 0x4;
-        
+
         /// The presentation of this update was done zero-copy
         const ZERO_COPY = 0x8;
     }
@@ -53,12 +52,16 @@ impl PresentationFeedback {
     }
     
     /// Get the optimal time to start rendering the next frame
-    /// 
+    ///
     /// This is typically a few milliseconds before the next vsync to account for
     /// rendering time and compositor latency.
     pub fn optimal_render_start(&self, render_time_budget: Duration) -> Instant {
         let next_vsync = self.predict_next_vsync();
-        next_vsync.saturating_sub(render_time_budget)
+        if next_vsync > Instant::now() + render_time_budget {
+            next_vsync - render_time_budget
+        } else {
+            next_vsync
+        }
     }
 }
 

@@ -10,7 +10,6 @@
 // - Chrome triple buffering: ui/ozone/platform/wayland/gpu/wayland_buffer_manager_gpu.cc
 // - Zed approach: Uses wgpu's present_mode = Mailbox (triple buffering)
 
-use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 /// Buffer state tracking for triple buffering

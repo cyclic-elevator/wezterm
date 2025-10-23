@@ -1,0 +1,528 @@
+Thread 27 (Thread 0x7f131f5776c0 (LWP 1046777) "wezterm-gui"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fcccc22 in clock_nanosleep@GLIBC_2.2.5 () from /lib64/libc.so.6
+#3  0x00007f131fcd8c37 in nanosleep () from /lib64/libc.so.6
+#4  0x000055db5048a8a0 in std::thread::sleep ()
+#5  0x000055db4c3f182f in wezterm_gui::stats::Inner::run (inner=...) at wezterm-gui/src/stats.rs:201
+#6  0x000055db4c038b8a in wezterm_gui::stats::{impl#7}::init::{closure#0} () at wezterm-gui/src/stats.rs:293
+#7  0x000055db4bf4d0ee in std::sys::backtrace::__rust_begin_short_backtrace<wezterm_gui::stats::{impl#7}::init::{closure_env#0}, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#8  0x000055db4bfd99b7 in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<wezterm_gui::stats::{impl#7}::init::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#9  0x000055db4bf9e250 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_gui::stats::{impl#7}::init::{closure_env#0}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#10 0x000055db4bd2603b in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_gui::stats::{impl#7}::init::{closure_env#0}, ()>>, ()> (data=0x7f131f576928) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#11 0x000055db4bfdaa4b in __rust_try ()
+#12 0x000055db4bfd75f0 in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_gui::stats::{impl#7}::init::{closure_env#0}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#13 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_gui::stats::{impl#7}::init::{closure_env#0}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#14 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<wezterm_gui::stats::{impl#7}::init::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#15 0x000055db4c10896e in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<wezterm_gui::stats::{impl#7}::init::{closure_env#0}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#16 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#17 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#18 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 26 (Thread 0x7f131efe56c0 (LWP 1046778) "async-io"):
+#0  0x000055db5006dec2 in rustix::backend::arch::asm::syscall5 (nr=..., a0=..., a1=..., a2=..., a3=..., a4=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustix-1.1.2/src/backend/linux_raw/arch/x86_64.rs:202
+#1  0x000055db5006ebf0 in rustix::backend::event::syscalls::epoll_wait (epfd=..., events=..., timeout=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustix-1.1.2/src/backend/linux_raw/arch/mod.rs:117
+#2  0x000055db5006d03d in rustix::event::epoll::wait<&std::os::fd::owned::OwnedFd, rustix::buffer::SpareCapacity<rustix::event::epoll::Event>> (epoll=0x55db538a9378 <async_io::reactor::Reactor::get::REACTOR+632>, event_list=..., timeout=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustix-1.1.2/src/event/epoll.rs:213
+#3  0x000055db50070ab2 in polling::epoll::Poller::wait_deadline (self=0x55db538a9378 <async_io::reactor::Reactor::get::REACTOR+632>, events=0x55db538a9308 <async_io::reactor::Reactor::get::REACTOR+520>, deadline=...) at src/epoll.rs:219
+#4  0x000055db5006fb6b in polling::Poller::wait_impl (self=0x55db538a9378 <async_io::reactor::Reactor::get::REACTOR+632>, events=0x55db538a9308 <async_io::reactor::Reactor::get::REACTOR+520>, deadline=...) at src/lib.rs:754
+#5  0x000055db5006fa5d in polling::Poller::wait (self=0x55db538a9378 <async_io::reactor::Reactor::get::REACTOR+632>, events=0x55db538a9308 <async_io::reactor::Reactor::get::REACTOR+520>, timeout=...) at src/lib.rs:732
+#6  0x000055db5004b4f9 in async_io::reactor::ReactorLock::react (self=0x7f131efe4690, timeout=...) at src/reactor.rs:302
+#7  0x000055db500590e3 in async_io::driver::main_loop (parker=...) at src/driver.rs:70
+#8  0x000055db50058f3a in async_io::driver::unparker::{closure#0}::{closure#0} () at src/driver.rs:31
+#9  0x000055db500476be in std::sys::backtrace::__rust_begin_short_backtrace<async_io::driver::unparker::{closure#0}::{closure_env#0}, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#10 0x000055db50048fef in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<async_io::driver::unparker::{closure#0}::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#11 0x000055db5004fff1 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<async_io::driver::unparker::{closure#0}::{closure_env#0}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#12 0x000055db50057b3c in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<async_io::driver::unparker::{closure#0}::{closure_env#0}, ()>>, ()> (data=0x7f131efe4928) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#13 0x000055db5004d13b in __rust_try ()
+#14 0x000055db50048a50 in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<async_io::driver::unparker::{closure#0}::{closure_env#0}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#15 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<async_io::driver::unparker::{closure#0}::{closure_env#0}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#16 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<async_io::driver::unparker::{closure#0}::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#17 0x000055db500402af in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<async_io::driver::unparker::{closure#0}::{closure_env#0}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#18 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#19 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#20 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 25 (Thread 0x7f131ede46c0 (LWP 1046779) "notify-rs inoti"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7c7a4 in __syscall_cancel () from /lib64/libc.so.6
+#3  0x00007f131fd03615 in epoll_wait () from /lib64/libc.so.6
+#4  0x000055db4f75ab08 in mio::sys::unix::selector::epoll::Selector::select (self=0x7f131ede2d80, events=0x7f131ede2c60, timeout=...) at src/sys/unix/mod.rs:7
+#5  0x000055db4f75a591 in mio::poll::Poll::poll (self=0x7f131ede2d78, events=0x7f131ede2c60, timeout=...) at src/poll.rs:426
+#6  0x000055db4f746e70 in notify::inotify::EventLoop::event_loop_thread (self=...) at src/inotify.rs:140
+#7  0x000055db4f746def in notify::inotify::{impl#0}::run::{closure#0} () at src/inotify.rs:133
+#8  0x000055db4f729bb6 in std::sys::backtrace::__rust_begin_short_backtrace<notify::inotify::{impl#0}::run::{closure_env#0}, ()> (f=<error reading variable: Cannot access memory at address 0x7>) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#9  0x000055db4f7445bf in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<notify::inotify::{impl#0}::run::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#10 0x000055db4f70ebb4 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<notify::inotify::{impl#0}::run::{closure_env#0}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#11 0x000055db4f739dd8 in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<notify::inotify::{impl#0}::run::{closure_env#0}, ()>>, ()> (data=0x7f131ede3778) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#12 0x000055db4f7451db in __rust_try ()
+#13 0x000055db4f7441cd in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<notify::inotify::{impl#0}::run::{closure_env#0}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#14 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<notify::inotify::{impl#0}::run::{closure_env#0}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#15 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<notify::inotify::{impl#0}::run::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#16 0x000055db4f7240ef in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<notify::inotify::{impl#0}::run::{closure_env#0}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#17 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#18 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#19 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 24 (Thread 0x7f131ebe36c0 (LWP 1046780) "wezterm-gui"):
+#0  0x00007f131fd010cd in syscall () from /lib64/libc.so.6
+#1  0x000055db5048ad56 in std::thread::Thread::park ()
+#2  0x000055db4f3b8c09 in std::sync::mpmc::context::Context::wait_until (self=0x7f131ebe1da0, deadline=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/context.rs:143
+#3  0x000055db4f32953a in std::sync::mpmc::list::{impl#3}::recv::{closure#1}<core::result::Result<notify::event::Event, notify::error::Error>> (cx=0x7f131ebe1da0) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/list.rs:453
+#4  0x000055db4f31f579 in std::sync::mpmc::context::{impl#0}::with::{closure#0}<std::sync::mpmc::list::{impl#3}::recv::{closure_env#1}<core::result::Result<notify::event::Event, notify::error::Error>>, ()> (cx=0x7f131ebe1da0) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/context.rs:49
+#5  std::sync::mpmc::context::{impl#0}::with::{closure#1}<std::sync::mpmc::list::{impl#3}::recv::{closure_env#1}<core::result::Result<notify::event::Event, notify::error::Error>>, ()> (cell=0x7f131ebe36b0) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/context.rs:57
+#6  0x000055db4f195bec in std::thread::local::LocalKey<core::cell::Cell<core::option::Option<std::sync::mpmc::context::Context>>>::try_with<core::cell::Cell<core::option::Option<std::sync::mpmc::context::Context>>, std::sync::mpmc::context::{impl#0}::with::{closure_env#1}<std::sync::mpmc::list::{impl#3}::recv::{closure_env#1}<core::result::Result<notify::event::Event, notify::error::Error>>, ()>, ()> (self=0x55db536accb0, f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/local.rs:315
+#7  0x000055db4f31e8c4 in std::sync::mpmc::context::Context::with<std::sync::mpmc::list::{impl#3}::recv::{closure_env#1}<core::result::Result<notify::event::Event, notify::error::Error>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/context.rs:53
+#8  0x000055db4f32934d in std::sync::mpmc::list::Channel<core::result::Result<notify::event::Event, notify::error::Error>>::recv<core::result::Result<notify::event::Event, notify::error::Error>> (self=0x55db71f62700, deadline=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/list.rs:442
+#9  0x000055db4f35af80 in std::sync::mpmc::Receiver<core::result::Result<notify::event::Event, notify::error::Error>>::recv<core::result::Result<notify::event::Event, notify::error::Error>> (self=0x7f131ebe25e0) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/mod.rs:984
+#10 0x000055db4f220f57 in std::sync::mpsc::Receiver<core::result::Result<notify::event::Event, notify::error::Error>>::recv<core::result::Result<notify::event::Event, notify::error::Error>> (self=0x7f131ebe25e0) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpsc.rs:845
+#11 0x000055db4f39c788 in config::{impl#3}::watch_path::{closure#0} () at config/src/lib.rs:529
+#12 0x000055db4f25b686 in std::sys::backtrace::__rust_begin_short_backtrace<config::{impl#3}::watch_path::{closure_env#0}, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#13 0x000055db4f253a2b in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<config::{impl#3}::watch_path::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#14 0x000055db4f3ba181 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<config::{impl#3}::watch_path::{closure_env#0}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#15 0x000055db4f35880c in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<config::{impl#3}::watch_path::{closure_env#0}, ()>>, ()> (data=0x7f131ebe28f8) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#16 0x000055db4f253abb in __rust_try ()
+#17 0x000055db4f25346d in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<config::{impl#3}::watch_path::{closure_env#0}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#18 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<config::{impl#3}::watch_path::{closure_env#0}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#19 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<config::{impl#3}::watch_path::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#20 0x000055db4f35da9f in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<config::{impl#3}::watch_path::{closure_env#0}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#21 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#22 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#23 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 23 (Thread 0x7f131e9e26c0 (LWP 1046781) "wezterm-gui"):
+#0  0x00007f131fd010cd in syscall () from /lib64/libc.so.6
+#1  0x000055db5048ad56 in std::thread::Thread::park ()
+#2  0x000055db4df1b2d9 in std::sync::mpmc::context::Context::wait_until (self=0x7f131e9e11f0, deadline=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/context.rs:143
+#3  0x000055db4defe4f2 in std::sync::mpmc::array::{impl#1}::recv::{closure#1}<()> (cx=0x7f131e9e11f0) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/array.rs:402
+#4  0x000055db4df10ad9 in std::sync::mpmc::context::{impl#0}::with::{closure#0}<std::sync::mpmc::array::{impl#1}::recv::{closure_env#1}<()>, ()> (cx=0x7f131e9e11f0) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/context.rs:49
+#5  std::sync::mpmc::context::{impl#0}::with::{closure#1}<std::sync::mpmc::array::{impl#1}::recv::{closure_env#1}<()>, ()> (cell=0x7f131e9e26b0) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/context.rs:57
+#6  0x000055db4deb4a7c in std::thread::local::LocalKey<core::cell::Cell<core::option::Option<std::sync::mpmc::context::Context>>>::try_with<core::cell::Cell<core::option::Option<std::sync::mpmc::context::Context>>, std::sync::mpmc::context::{impl#0}::with::{closure_env#1}<std::sync::mpmc::array::{impl#1}::recv::{closure_env#1}<()>, ()>, ()> (self=0x55db535fb640, f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/local.rs:315
+#7  0x000055db4df0b4a4 in std::sync::mpmc::context::Context::with<std::sync::mpmc::array::{impl#1}::recv::{closure_env#1}<()>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/context.rs:53
+#8  0x000055db4defdb6f in std::sync::mpmc::array::Channel<()>::recv<()> (self=0x55db71ed6d80, deadline=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/array.rs:390
+#9  0x000055db4ded5384 in std::sync::mpmc::Receiver<()>::recv<()> (self=0x7f131e9e1618) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/mod.rs:983
+#10 0x000055db4dea459b in std::sync::mpsc::Receiver<()>::recv<()> (self=0x7f131e9e1618) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpsc.rs:845
+#11 0x000055db4ded0d0c in mux::ssh_agent::AgentProxy::process_updates (receiver=...) at mux/src/ssh_agent.rs:124
+#12 0x000055db4debd163 in mux::ssh_agent::{impl#1}::new::{closure#0} () at mux/src/ssh_agent.rs:95
+#13 0x000055db4dede713 in std::sys::backtrace::__rust_begin_short_backtrace<mux::ssh_agent::{impl#1}::new::{closure_env#0}, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#14 0x000055db4de51683 in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<mux::ssh_agent::{impl#1}::new::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#15 0x000055db4dee0111 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<mux::ssh_agent::{impl#1}::new::{closure_env#0}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#16 0x000055db4de1a010 in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<mux::ssh_agent::{impl#1}::new::{closure_env#0}, ()>>, ()> (data=0x7f131e9e1908) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#17 0x000055db4de5261b in __rust_try ()
+#18 0x000055db4de4fe99 in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<mux::ssh_agent::{impl#1}::new::{closure_env#0}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#19 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<mux::ssh_agent::{impl#1}::new::{closure_env#0}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#20 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<mux::ssh_agent::{impl#1}::new::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#21 0x000055db4dce3bcf in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<mux::ssh_agent::{impl#1}::new::{closure_env#0}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#22 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#23 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#24 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 22 (Thread 0x7f131e7e16c0 (LWP 1046782) "wezterm-gui"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7c7a4 in __syscall_cancel () from /lib64/libc.so.6
+#3  0x00007f131fd04bc2 in accept4 () from /lib64/libc.so.6
+#4  0x000055db504827f1 in <std::os::unix::net::listener::Incoming as core::iter::traits::iterator::Iterator>::next ()
+#5  0x000055db4d367483 in core::iter::adapters::map::{impl#2}::next<core::result::Result<wezterm_uds::UnixStream, std::io::error::Error>, std::os::unix::net::listener::Incoming, wezterm_uds::{impl#10}::incoming::{closure_env#0}> (self=0x7f131e7dcfa8) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/iter/adapters/map.rs:107
+#6  0x000055db4d34e9d0 in wezterm_mux_server_impl::local::LocalListener::run (self=0x7f131e7e0648) at wezterm-mux-server-impl/src/local.rs:21
+#7  0x000055db4bd0b09c in wezterm_gui::spawn_mux_server::{closure#0} () at wezterm-gui/src/main.rs:673
+#8  0x000055db4bf4d096 in std::sys::backtrace::__rust_begin_short_backtrace<wezterm_gui::spawn_mux_server::{closure_env#0}, ()> (f=<error reading variable: Cannot access memory at address 0xb>) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#9  0x000055db4bfd7dba in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<wezterm_gui::spawn_mux_server::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#10 0x000055db4bf9e650 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_gui::spawn_mux_server::{closure_env#0}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#11 0x000055db4bd25f6f in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_gui::spawn_mux_server::{closure_env#0}, ()>>, ()> (data=0x7f131e7e0908) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#12 0x000055db4bfdaa4b in __rust_try ()
+#13 0x000055db4bfd4741 in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_gui::spawn_mux_server::{closure_env#0}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#14 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_gui::spawn_mux_server::{closure_env#0}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#15 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<wezterm_gui::spawn_mux_server::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#16 0x000055db4c10926e in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<wezterm_gui::spawn_mux_server::{closure_env#0}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#17 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#18 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#19 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 21 (Thread 0x7f131e1de6c0 (LWP 1046785) "wezterm-gui"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7c7a4 in __syscall_cancel () from /lib64/libc.so.6
+#3  0x00007f131fcf629e in poll () from /lib64/libc.so.6
+#4  0x000055db4f959d0e in filedescriptor::unix::poll_impl (pfd=..., duration=...) at filedescriptor/src/unix.rs:448
+#5  0x000055db4f9590d5 in filedescriptor::poll (pfd=..., duration=...) at filedescriptor/src/lib.rs:387
+#6  0x000055db4f4ab5e3 in wezterm_ssh::sessioninner::SessionInner::request_loop (self=0x7f131e1dcdc8, sess=0x7f131e1dc9e8) at wezterm-ssh/src/sessioninner.rs:497
+#7  0x000055db4f4a7938 in wezterm_ssh::sessioninner::SessionInner::run_impl_libssh (self=0x7f131e1dcdc8) at wezterm-ssh/src/sessioninner.rs:256
+#8  0x000055db4f4a5603 in wezterm_ssh::sessioninner::SessionInner::run_impl (self=0x7f131e1dcdc8) at wezterm-ssh/src/sessioninner.rs:94
+#9  0x000055db4f4a5329 in wezterm_ssh::sessioninner::SessionInner::run (self=0x7f131e1dcdc8) at wezterm-ssh/src/sessioninner.rs:65
+#10 0x000055db4f434c8d in wezterm_ssh::session::{impl#2}::connect::{closure#1} () at wezterm-ssh/src/session.rs:127
+#11 0x000055db4f4bac06 in std::sys::backtrace::__rust_begin_short_backtrace<wezterm_ssh::session::{impl#2}::connect::{closure_env#1}, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#12 0x000055db4f43632c in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<wezterm_ssh::session::{impl#2}::connect::{closure_env#1}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#13 0x000055db4f4bb2e4 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_ssh::session::{impl#2}::connect::{closure_env#1}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#14 0x000055db4f436cc8 in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_ssh::session::{impl#2}::connect::{closure_env#1}, ()>>, ()> (data=0x7f131e1dd758) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#15 0x000055db4f4363bb in __rust_try ()
+#16 0x000055db4f435d61 in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_ssh::session::{impl#2}::connect::{closure_env#1}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#17 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_ssh::session::{impl#2}::connect::{closure_env#1}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#18 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<wezterm_ssh::session::{impl#2}::connect::{closure_env#1}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#19 0x000055db4f41185f in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<wezterm_ssh::session::{impl#2}::connect::{closure_env#1}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#20 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#21 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#22 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 20 (Thread 0x7f131df966c0 (LWP 1046787) "wezterm-gui"):
+#0  0x00007f131fd010cd in syscall () from /lib64/libc.so.6
+#1  0x000055db5048ad56 in std::thread::Thread::park ()
+#2  0x000055db4f8a0309 in std::sync::mpmc::context::Context::wait_until (self=0x7f131df950b0, deadline=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/context.rs:143
+#3  0x000055db4f89beea in std::sync::mpmc::list::{impl#3}::recv::{closure#1}<wezterm_term::terminalstate::WriterMessage> (cx=0x7f131df950b0) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/list.rs:453
+#4  0x000055db4f89da09 in std::sync::mpmc::context::{impl#0}::with::{closure#0}<std::sync::mpmc::list::{impl#3}::recv::{closure_env#1}<wezterm_term::terminalstate::WriterMessage>, ()> (cx=0x7f131df950b0) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/context.rs:49
+#5  std::sync::mpmc::context::{impl#0}::with::{closure#1}<std::sync::mpmc::list::{impl#3}::recv::{closure_env#1}<wezterm_term::terminalstate::WriterMessage>, ()> (cell=0x7f131df966b0) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/context.rs:57
+#6  0x000055db4f8a342c in std::thread::local::LocalKey<core::cell::Cell<core::option::Option<std::sync::mpmc::context::Context>>>::try_with<core::cell::Cell<core::option::Option<std::sync::mpmc::context::Context>>, std::sync::mpmc::context::{impl#0}::with::{closure_env#1}<std::sync::mpmc::list::{impl#3}::recv::{closure_env#1}<wezterm_term::terminalstate::WriterMessage>, ()>, ()> (self=0x55db536dc3d8, f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/local.rs:315
+#7  0x000055db4f89c554 in std::sync::mpmc::context::Context::with<std::sync::mpmc::list::{impl#3}::recv::{closure_env#1}<wezterm_term::terminalstate::WriterMessage>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/context.rs:53
+#8  0x000055db4f89bcd1 in std::sync::mpmc::list::Channel<wezterm_term::terminalstate::WriterMessage>::recv<wezterm_term::terminalstate::WriterMessage> (self=0x55db72085d80, deadline=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/list.rs:442
+#9  0x000055db4f876627 in std::sync::mpmc::Receiver<wezterm_term::terminalstate::WriterMessage>::recv<wezterm_term::terminalstate::WriterMessage> (self=0x7f131df95630) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpmc/mod.rs:984
+#10 0x000055db4f839517 in std::sync::mpsc::Receiver<wezterm_term::terminalstate::WriterMessage>::recv<wezterm_term::terminalstate::WriterMessage> (self=0x7f131df95630) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/mpsc.rs:845
+#11 0x000055db4f87bbaf in wezterm_term::terminalstate::{impl#4}::new::{closure#0} () at term/src/terminalstate/mod.rs:460
+#12 0x000055db4f8a0826 in std::sys::backtrace::__rust_begin_short_backtrace<wezterm_term::terminalstate::{impl#4}::new::{closure_env#0}, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#13 0x000055db4f88b442 in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<wezterm_term::terminalstate::{impl#4}::new::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#14 0x000055db4f8a0851 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_term::terminalstate::{impl#4}::new::{closure_env#0}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#15 0x000055db4f893660 in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_term::terminalstate::{impl#4}::new::{closure_env#0}, ()>>, ()> (data=0x7f131df95908) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#16 0x000055db4f88b4cb in __rust_try ()
+#17 0x000055db4f88b031 in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_term::terminalstate::{impl#4}::new::{closure_env#0}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#18 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_term::terminalstate::{impl#4}::new::{closure_env#0}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#19 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<wezterm_term::terminalstate::{impl#4}::new::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#20 0x000055db4f851a3f in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<wezterm_term::terminalstate::{impl#4}::new::{closure_env#0}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#21 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#22 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#23 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 19 (Thread 0x7f131dd956c0 (LWP 1046788) "wezterm-gui"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7c7a4 in __syscall_cancel () from /lib64/libc.so.6
+#3  0x00007f131fcf67fe in read () from /lib64/libc.so.6
+#4  0x000055db4f958be5 in filedescriptor::unix::{impl#12}::read (self=0x55db7206f3b0, buf=...) at filedescriptor/src/unix.rs:210
+#5  0x000055db4f4761b2 in std::io::impls::{impl#4}::read<dyn std::io::Read> (self=0x7f131dd93f80, buf=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/io/impls.rs:155
+#6  0x000055db4dc923c4 in mux::read_from_pane_pty (pane=..., banner=..., reader=...) at mux/src/lib.rs:320
+#7  0x000055db4de85488 in mux::{impl#3}::add_pane::{closure#0} () at mux/src/lib.rs:792
+#8  0x000055db4dede696 in std::sys::backtrace::__rust_begin_short_backtrace<mux::{impl#3}::add_pane::{closure_env#0}, ()> (f=<error reading variable: Cannot access memory at address 0x17>) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#9  0x000055db4de5229a in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<mux::{impl#3}::add_pane::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#10 0x000055db4dee01c1 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<mux::{impl#3}::add_pane::{closure_env#0}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#11 0x000055db4de1a9ac in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<mux::{impl#3}::add_pane::{closure_env#0}, ()>>, ()> (data=0x7f131dd948d8) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#12 0x000055db4de5261b in __rust_try ()
+#13 0x000055db4de4d841 in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<mux::{impl#3}::add_pane::{closure_env#0}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#14 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<mux::{impl#3}::add_pane::{closure_env#0}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#15 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<mux::{impl#3}::add_pane::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#16 0x000055db4dce3c4f in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<mux::{impl#3}::add_pane::{closure_env#0}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#17 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#18 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#19 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 18 (Thread 0x7f131db946c0 (LWP 1046789) "wezterm-gui"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7c7a4 in __syscall_cancel () from /lib64/libc.so.6
+#3  0x00007f131fcf67fe in read () from /lib64/libc.so.6
+#4  0x000055db4f958be5 in filedescriptor::unix::{impl#12}::read (self=0x7f131db92074, buf=...) at filedescriptor/src/unix.rs:210
+#5  0x000055db4dc9148a in mux::parse_buffered_data (pane=..., dead=0x7f131db93640, rx=...) at mux/src/lib.rs:150
+#6  0x000055db4de84581 in mux::read_from_pane_pty::{closure#0} () at mux/src/lib.rs:312
+#7  0x000055db4dede6d6 in std::sys::backtrace::__rust_begin_short_backtrace<mux::read_from_pane_pty::{closure_env#0}, ()> (f=<error reading variable: Cannot access memory at address 0x19>) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#8  0x000055db4de52342 in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<mux::read_from_pane_pty::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#9  0x000055db4dee0431 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<mux::read_from_pane_pty::{closure_env#0}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#10 0x000055db4de1acf0 in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<mux::read_from_pane_pty::{closure_env#0}, ()>>, ()> (data=0x7f131db93908) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#11 0x000055db4de5261b in __rust_try ()
+#12 0x000055db4de4f901 in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<mux::read_from_pane_pty::{closure_env#0}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#13 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<mux::read_from_pane_pty::{closure_env#0}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#14 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<mux::read_from_pane_pty::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#15 0x000055db4dce3b8f in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<mux::read_from_pane_pty::{closure_env#0}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#16 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#17 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#18 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 17 (Thread 0x7f131d9936c0 (LWP 1046790) "wezterm-gui"):
+#0  0x00007f131fd010cd in syscall () from /lib64/libc.so.6
+#1  0x000055db5048ab07 in std::thread::park_timeout ()
+#2  0x000055db4de32dfd in crossbeam_channel::context::Context::wait_until (self=0x7f131d990d00, deadline=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/crossbeam-channel-0.5.15/src/context.rs:153
+#3  0x000055db4dea1ad3 in crossbeam_channel::flavors::list::{impl#3}::recv::{closure#1}<mux::connui::UIRequest> (cx=0x7f131d990d00) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/crossbeam-channel-0.5.15/src/flavors/list.rs:495
+#4  0x000055db4debb156 in crossbeam_channel::context::{impl#0}::with::{closure#0}<crossbeam_channel::flavors::list::{impl#3}::recv::{closure_env#1}<mux::connui::UIRequest>, ()> (cx=0x7f131d990d00) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/crossbeam-channel-0.5.15/src/context.rs:52
+#5  0x000055db4debb35b in crossbeam_channel::context::{impl#0}::with::{closure#1}<crossbeam_channel::flavors::list::{impl#3}::recv::{closure_env#1}<mux::connui::UIRequest>, ()> (cell=0x7f131d993568) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/crossbeam-channel-0.5.15/src/context.rs:60
+#6  0x000055db4deb7ebc in std::thread::local::LocalKey<core::cell::Cell<core::option::Option<crossbeam_channel::context::Context>>>::try_with<core::cell::Cell<core::option::Option<crossbeam_channel::context::Context>>, crossbeam_channel::context::{impl#0}::with::{closure_env#1}<crossbeam_channel::flavors::list::{impl#3}::recv::{closure_env#1}<mux::connui::UIRequest>, ()>, ()> (self=0x55db535f7cf0, f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/local.rs:315
+#7  0x000055db4deba694 in crossbeam_channel::context::Context::with<crossbeam_channel::flavors::list::{impl#3}::recv::{closure_env#1}<mux::connui::UIRequest>, ()> (f=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/crossbeam-channel-0.5.15/src/context.rs:56
+#8  0x000055db4dea172e in crossbeam_channel::flavors::list::Channel<mux::connui::UIRequest>::recv<mux::connui::UIRequest> (self=0x55db72386100, deadline=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/crossbeam-channel-0.5.15/src/flavors/list.rs:485
+#9  0x000055db4dc905e7 in crossbeam_channel::channel::Receiver<mux::connui::UIRequest>::recv_deadline<mux::connui::UIRequest> (self=0x7f131d991580, deadline=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/crossbeam-channel-0.5.15/src/channel.rs:926
+#10 0x000055db4dc9029a in crossbeam_channel::channel::Receiver<mux::connui::UIRequest>::recv_timeout<mux::connui::UIRequest> (self=0x7f131d991580, timeout=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/crossbeam-channel-0.5.15/src/channel.rs:879
+#11 0x000055db4de6e1bd in mux::connui::ConnectionUIImpl::run (self=0x7f131d991498) at mux/src/connui.rs:72
+#12 0x000055db4de11202 in mux::connui::{impl#3}::with_params::{closure#0} (term=...) at mux/src/connui.rs:262
+#13 0x000055db4de9ca0d in mux::termwiztermtab::run::{async_fn#0}::{closure#1}<(), mux::connui::{impl#3}::with_params::{closure_env#0}> () at mux/src/termwiztermtab.rs:567
+#14 0x000055db4dc5a2c5 in promise::spawn::spawn_into_new_thread::{closure#0}<mux::termwiztermtab::run::{async_fn#0}::{closure_env#1}<(), mux::connui::{impl#3}::with_params::{closure_env#0}>, ()> () at promise/src/spawn.rs:78
+#15 0x000055db4dede6f7 in std::sys::backtrace::__rust_begin_short_backtrace<promise::spawn::spawn_into_new_thread::{closure_env#0}<mux::termwiztermtab::run::{async_fn#0}::{closure_env#1}<(), mux::connui::{impl#3}::with_params::{closure_env#0}>, ()>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#16 0x000055db4de521df in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<promise::spawn::spawn_into_new_thread::{closure_env#0}<mux::termwiztermtab::run::{async_fn#0}::{closure_env#1}<(), mux::connui::{impl#3}::with_params::{closure_env#0}>, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#17 0x000055db4dedfc84 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<promise::spawn::spawn_into_new_thread::{closure_env#0}<mux::termwiztermtab::run::{async_fn#0}::{closure_env#1}<(), mux::connui::{impl#3}::with_params::{closure_env#0}>, ()>, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#18 0x000055db4de1b3c8 in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<promise::spawn::spawn_into_new_thread::{closure_env#0}<mux::termwiztermtab::run::{async_fn#0}::{closure_env#1}<(), mux::connui::{impl#3}::with_params::{closure_env#0}>, ()>, ()>>, ()> (data=0x7f131d9926b8) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#19 0x000055db4de5261b in __rust_try ()
+#20 0x000055db4de50bcd in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<promise::spawn::spawn_into_new_thread::{closure_env#0}<mux::termwiztermtab::run::{async_fn#0}::{closure_env#1}<(), mux::connui::{impl#3}::with_params::{closure_env#0}>, ()>, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#21 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<promise::spawn::spawn_into_new_thread::{closure_env#0}<mux::termwiztermtab::run::{async_fn#0}::{closure_env#1}<(), mux::connui::{impl#3}::with_params::{closure_env#0}>, ()>, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#22 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<promise::spawn::spawn_into_new_thread::{closure_env#0}<mux::termwiztermtab::run::{async_fn#0}::{closure_env#1}<(), mux::connui::{impl#3}::with_params::{closure_env#0}>, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#23 0x000055db4dce3a0f in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<promise::spawn::spawn_into_new_thread::{closure_env#0}<mux::termwiztermtab::run::{async_fn#0}::{closure_env#1}<(), mux::connui::{impl#3}::with_params::{closure_env#0}>, ()>, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#24 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#25 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#26 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 16 (Thread 0x7f131d7926c0 (LWP 1046791) "zbus::Connectio"):
+#0  0x00007f131fd010cd in syscall () from /lib64/libc.so.6
+#1  0x000055db50489ad5 in std::sys::sync::condvar::futex::Condvar::wait ()
+#2  0x000055db5008a0b2 in std::sync::poison::condvar::Condvar::wait<()> (self=0x7f12e0000b90, guard=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/poison/condvar.rs:191
+#3  0x000055db5008c15a in parking::Inner::park (self=0x7f12e0000b80, timeout=...) at src/lib.rs:377
+#4  0x000055db5008bd98 in parking::Parker::park (self=0x7f131d7925f8) at src/lib.rs:132
+#5  0x000055db4ede02a6 in async_io::driver::block_on::{closure#1}<(), zbus::connection::builder::start_internal_executor::{closure#0}::{async_block_env#0}> (cache=0x7f131d7925f0) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-io-2.6.0/src/driver.rs:290
+#6  0x000055db4eccb962 in std::thread::local::LocalKey<core::cell::RefCell<(parking::Parker, core::task::wake::Waker, alloc::sync::Arc<core::sync::atomic::AtomicBool, alloc::alloc::Global>)>>::try_with<core::cell::RefCell<(parking::Parker, core::task::wake::Waker, alloc::sync::Arc<core::sync::atomic::AtomicBool, alloc::alloc::Global>)>, async_io::driver::block_on::{closure_env#1}<(), zbus::connection::builder::start_internal_executor::{closure#0}::{async_block_env#0}>, ()> (self=0x55db536744e8, f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/local.rs:315
+#7  0x000055db4eccb68f in std::thread::local::LocalKey<core::cell::RefCell<(parking::Parker, core::task::wake::Waker, alloc::sync::Arc<core::sync::atomic::AtomicBool, alloc::alloc::Global>)>>::with<core::cell::RefCell<(parking::Parker, core::task::wake::Waker, alloc::sync::Arc<core::sync::atomic::AtomicBool, alloc::alloc::Global>)>, async_io::driver::block_on::{closure_env#1}<(), zbus::connection::builder::start_internal_executor::{closure#0}::{async_block_env#0}>, ()> (self=0x55db536744e8, f=<error reading variable: Cannot access memory at address 0x111>) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/local.rs:279
+#8  0x000055db4eddfd27 in async_io::driver::block_on<(), zbus::connection::builder::start_internal_executor::{closure#0}::{async_block_env#0}> (future=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-io-2.6.0/src/driver.rs:180
+#9  0x000055db4ed53cf7 in zbus::utils::block_on<zbus::connection::builder::start_internal_executor::{closure#0}::{async_block_env#0}> (future=...) at src/utils.rs:34
+#10 0x000055db4ee2a994 in zbus::connection::builder::start_internal_executor::{closure#0} () at src/connection/builder.rs:571
+#11 0x000055db4ede0e7e in std::sys::backtrace::__rust_begin_short_backtrace<zbus::connection::builder::start_internal_executor::{closure_env#0}, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#12 0x000055db4ecda24f in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<zbus::connection::builder::start_internal_executor::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#13 0x000055db4ee77831 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<zbus::connection::builder::start_internal_executor::{closure_env#0}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#14 0x000055db4ed626ec in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<zbus::connection::builder::start_internal_executor::{closure_env#0}, ()>>, ()> (data=0x7f131d791928) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#15 0x000055db4ed0cbcb in __rust_try ()
+#16 0x000055db4ecda030 in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<zbus::connection::builder::start_internal_executor::{closure_env#0}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#17 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<zbus::connection::builder::start_internal_executor::{closure_env#0}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#18 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<zbus::connection::builder::start_internal_executor::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#19 0x000055db4ec5788f in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<zbus::connection::builder::start_internal_executor::{closure_env#0}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#20 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#21 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#22 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 15 (Thread 0x7f131cdff6c0 (LWP 1046792) "wezterm-gu:cs0"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7cdcc in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f131fc7f49e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f12e554ec1d in cnd_wait () from /lib64/libgallium-25.1.9.so
+#5  0x00007f12e55082fc in util_queue_thread_func () from /lib64/libgallium-25.1.9.so
+#6  0x00007f12e554eb4c in impl_thrd_routine () from /lib64/libgallium-25.1.9.so
+#7  0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#8  0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 14 (Thread 0x7f12e4fff6c0 (LWP 1046793) "wezterm:disk$0"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7cdcc in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f131fc7f49e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f12e554ec1d in cnd_wait () from /lib64/libgallium-25.1.9.so
+#5  0x00007f12e55082fc in util_queue_thread_func () from /lib64/libgallium-25.1.9.so
+#6  0x00007f12e554eb4c in impl_thrd_routine () from /lib64/libgallium-25.1.9.so
+#7  0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#8  0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 13 (Thread 0x7f12d77ff6c0 (LWP 1046794) "wezterm-gu:sh0"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7cdcc in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f131fc7f49e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f12e554ec1d in cnd_wait () from /lib64/libgallium-25.1.9.so
+#5  0x00007f12e55082fc in util_queue_thread_func () from /lib64/libgallium-25.1.9.so
+#6  0x00007f12e554eb4c in impl_thrd_routine () from /lib64/libgallium-25.1.9.so
+#7  0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#8  0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 12 (Thread 0x7f12d6ffe6c0 (LWP 1046795) "wezter:sh_opt0"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7cdcc in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f131fc7f49e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f12e554ec1d in cnd_wait () from /lib64/libgallium-25.1.9.so
+#5  0x00007f12e55082fc in util_queue_thread_func () from /lib64/libgallium-25.1.9.so
+#6  0x00007f12e554eb4c in impl_thrd_routine () from /lib64/libgallium-25.1.9.so
+#7  0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#8  0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 11 (Thread 0x7f12d67fd6c0 (LWP 1046796) "wezter:traceq0"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7cdcc in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f131fc7f49e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f12e554ec1d in cnd_wait () from /lib64/libgallium-25.1.9.so
+#5  0x00007f12e55082fc in util_queue_thread_func () from /lib64/libgallium-25.1.9.so
+#6  0x00007f12e554eb4c in impl_thrd_routine () from /lib64/libgallium-25.1.9.so
+#7  0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#8  0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 10 (Thread 0x7f12d5ffc6c0 (LWP 1046797) "wezter:traceq0"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7cdcc in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f131fc7f49e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f12e554ec1d in cnd_wait () from /lib64/libgallium-25.1.9.so
+#5  0x00007f12e55082fc in util_queue_thread_func () from /lib64/libgallium-25.1.9.so
+#6  0x00007f12e554eb4c in impl_thrd_routine () from /lib64/libgallium-25.1.9.so
+#7  0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#8  0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 9 (Thread 0x7f12d57fb6c0 (LWP 1046798) "wezter:traceq0"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7cdcc in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f131fc7f49e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f12e554ec1d in cnd_wait () from /lib64/libgallium-25.1.9.so
+#5  0x00007f12e55082fc in util_queue_thread_func () from /lib64/libgallium-25.1.9.so
+#6  0x00007f12e554eb4c in impl_thrd_routine () from /lib64/libgallium-25.1.9.so
+#7  0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#8  0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 8 (Thread 0x7f12d4ffa6c0 (LWP 1046799) "wezter:traceq0"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7cdcc in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f131fc7f49e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f12e554ec1d in cnd_wait () from /lib64/libgallium-25.1.9.so
+#5  0x00007f12e55082fc in util_queue_thread_func () from /lib64/libgallium-25.1.9.so
+#6  0x00007f12e554eb4c in impl_thrd_routine () from /lib64/libgallium-25.1.9.so
+#7  0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#8  0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 7 (Thread 0x7f12b7fff6c0 (LWP 1046800) "wezterm-:gdrv0"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7cdcc in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f131fc7f49e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f12e554ec1d in cnd_wait () from /lib64/libgallium-25.1.9.so
+#5  0x00007f12e55082fc in util_queue_thread_func () from /lib64/libgallium-25.1.9.so
+#6  0x00007f12e554eb4c in impl_thrd_routine () from /lib64/libgallium-25.1.9.so
+#7  0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#8  0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 6 (Thread 0x7f12b77fe6c0 (LWP 1046801) "wezterm-gu:gl0"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7cdcc in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f131fc7f49e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f12e554ec1d in cnd_wait () from /lib64/libgallium-25.1.9.so
+#5  0x00007f12e55082fc in util_queue_thread_func () from /lib64/libgallium-25.1.9.so
+#6  0x00007f12e554eb4c in impl_thrd_routine () from /lib64/libgallium-25.1.9.so
+#7  0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#8  0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 5 (Thread 0x7f12b6dfd6c0 (LWP 1046802) "update_checker"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fcccc22 in clock_nanosleep@GLIBC_2.2.5 () from /lib64/libc.so.6
+#3  0x00007f131fcd8c37 in nanosleep () from /lib64/libc.so.6
+#4  0x000055db5048a8a0 in std::thread::sleep ()
+#5  0x000055db4bcf9a14 in wezterm_gui::update::update_checker () at wezterm-gui/src/update.rs:170
+#6  0x000055db4c1105c6 in core::ops::function::FnOnce::call_once<fn(), ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#7  0x000055db4bf4d0a6 in std::sys::backtrace::__rust_begin_short_backtrace<fn(), ()> (f=0x55db4bfda1f60000) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#8  0x000055db4bfda1f6 in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<fn(), ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#9  0x000055db4bf9e911 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<fn(), ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#10 0x000055db4bd27980 in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<fn(), ()>>, ()> (data=0x7f12b6dfc948) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#11 0x000055db4bfdaa4b in __rust_try ()
+#12 0x000055db4bfd3f73 in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<fn(), ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#13 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<fn(), ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#14 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<fn(), ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#15 0x000055db4c107f8e in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<fn(), ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#16 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#17 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#18 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 4 (Thread 0x7f12b5dfc6c0 (LWP 1046808) "wezterm-gui"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7c7a4 in __syscall_cancel () from /lib64/libc.so.6
+#3  0x00007f131fcf67fe in read () from /lib64/libc.so.6
+#4  0x000055db4f958be5 in filedescriptor::unix::{impl#12}::read (self=0x7f12b5dfb20c, buf=...) at filedescriptor/src/unix.rs:210
+#5  0x000055db4d5edb64 in wezterm_client::client::{impl#6}::ssh_connect::{closure#0} () at wezterm-client/src/client.rs:703
+#6  0x000055db4d81c45d in std::sys::backtrace::__rust_begin_short_backtrace<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#0}, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#7  0x000055db4d60ea4e in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#8  0x000055db4d88c431 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#0}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#9  0x000055db4d73d6dc in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#0}, ()>>, ()> (data=0x7f12b5dfb928) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#10 0x000055db4d60f7bb in __rust_try ()
+#11 0x000055db4d60dc17 in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#0}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#12 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#0}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#13 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#14 0x000055db4d7262df in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#0}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#15 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#16 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#17 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 3 (Thread 0x7f12b5bfb6c0 (LWP 1046809) "wezterm-gui"):
+#0  0x00007f131fd010cd in syscall () from /lib64/libc.so.6
+#1  0x000055db50489ad5 in std::sys::sync::condvar::futex::Condvar::wait ()
+#2  0x000055db5008a0b2 in std::sync::poison::condvar::Condvar::wait<()> (self=0x7f12a0000b90, guard=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/poison/condvar.rs:191
+#3  0x000055db5008c15a in parking::Inner::park (self=0x7f12a0000b80, timeout=...) at src/lib.rs:377
+#4  0x000055db5008bd98 in parking::Parker::park (self=0x7f12b5bfb5f8) at src/lib.rs:132
+#5  0x000055db4f460cc8 in async_io::driver::block_on::{closure#1}<core::result::Result<portable_pty::ExitStatus, async_channel::RecvError>, async_channel::Recv<portable_pty::ExitStatus>> (cache=0x7f12b5bfb5f0) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-io-2.6.0/src/driver.rs:290
+#6  0x000055db4f4bc782 in std::thread::local::LocalKey<core::cell::RefCell<(parking::Parker, core::task::wake::Waker, alloc::sync::Arc<core::sync::atomic::AtomicBool, alloc::alloc::Global>)>>::try_with<core::cell::RefCell<(parking::Parker, core::task::wake::Waker, alloc::sync::Arc<core::sync::atomic::AtomicBool, alloc::alloc::Global>)>, async_io::driver::block_on::{closure_env#1}<core::result::Result<portable_pty::ExitStatus, async_channel::RecvError>, async_channel::Recv<portable_pty::ExitStatus>>, core::result::Result<portable_pty::ExitStatus, async_channel::RecvError>> (self=0x55db536b34e0, f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/local.rs:315
+#7  0x000055db4f4bb958 in std::thread::local::LocalKey<core::cell::RefCell<(parking::Parker, core::task::wake::Waker, alloc::sync::Arc<core::sync::atomic::AtomicBool, alloc::alloc::Global>)>>::with<core::cell::RefCell<(parking::Parker, core::task::wake::Waker, alloc::sync::Arc<core::sync::atomic::AtomicBool, alloc::alloc::Global>)>, async_io::driver::block_on::{closure_env#1}<core::result::Result<portable_pty::ExitStatus, async_channel::RecvError>, async_channel::Recv<portable_pty::ExitStatus>>, core::result::Result<portable_pty::ExitStatus, async_channel::RecvError>> (self=0x55db536b34e0, f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/local.rs:279
+#8  0x000055db4f45e899 in async_io::driver::block_on<core::result::Result<portable_pty::ExitStatus, async_channel::RecvError>, async_channel::Recv<portable_pty::ExitStatus>> (future=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-io-2.6.0/src/driver.rs:180
+#9  0x000055db4f402c1b in wezterm_ssh::pty::{impl#3}::wait (self=0x7f12b5bfa3c8) at wezterm-ssh/src/pty.rs:142
+#10 0x000055db4d5edeb9 in wezterm_client::client::{impl#6}::ssh_connect::{closure#1} () at wezterm-client/src/client.rs:717
+#11 0x000055db4d81c4b6 in std::sys::backtrace::__rust_begin_short_backtrace<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#1}, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#12 0x000055db4d60f16f in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#1}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#13 0x000055db4d88cbc4 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#1}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#14 0x000055db4d73c49c in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#1}, ()>>, ()> (data=0x7f12b5bfa888) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#15 0x000055db4d60f7bb in __rust_try ()
+#16 0x000055db4d60d6ae in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#1}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#17 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#1}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#18 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#1}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#19 0x000055db4d72631f in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<wezterm_client::client::{impl#6}::ssh_connect::{closure_env#1}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#20 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#21 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#22 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 2 (Thread 0x7f12b59fa6c0 (LWP 1046810) "wezterm-gui"):
+#0  0x00007f131fd010cd in syscall () from /lib64/libc.so.6
+#1  0x000055db50489ad5 in std::sys::sync::condvar::futex::Condvar::wait ()
+#2  0x000055db5008a0b2 in std::sync::poison::condvar::Condvar::wait<()> (self=0x7f1294000b90, guard=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sync/poison/condvar.rs:191
+#3  0x000055db5008c15a in parking::Inner::park (self=0x7f1294000b80, timeout=...) at src/lib.rs:377
+#4  0x000055db5008bd98 in parking::Parker::park (self=0x7f12b59fa5f8) at src/lib.rs:132
+#5  0x000055db4d67819d in async_io::driver::block_on::{closure#1}<core::result::Result<(), anyhow::Error>, wezterm_client::client::client_thread_async::{async_fn_env#0}> (cache=0x7f12b59fa5f0) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-io-2.6.0/src/driver.rs:290
+#6  0x000055db4d843474 in std::thread::local::LocalKey<core::cell::RefCell<(parking::Parker, core::task::wake::Waker, alloc::sync::Arc<core::sync::atomic::AtomicBool, alloc::alloc::Global>)>>::try_with<core::cell::RefCell<(parking::Parker, core::task::wake::Waker, alloc::sync::Arc<core::sync::atomic::AtomicBool, alloc::alloc::Global>)>, async_io::driver::block_on::{closure_env#1}<core::result::Result<(), anyhow::Error>, wezterm_client::client::client_thread_async::{async_fn_env#0}>, core::result::Result<(), anyhow::Error>> (self=0x55db535cd448, f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/local.rs:315
+#7  0x000055db4d83536f in std::thread::local::LocalKey<core::cell::RefCell<(parking::Parker, core::task::wake::Waker, alloc::sync::Arc<core::sync::atomic::AtomicBool, alloc::alloc::Global>)>>::with<core::cell::RefCell<(parking::Parker, core::task::wake::Waker, alloc::sync::Arc<core::sync::atomic::AtomicBool, alloc::alloc::Global>)>, async_io::driver::block_on::{closure_env#1}<core::result::Result<(), anyhow::Error>, wezterm_client::client::client_thread_async::{async_fn_env#0}>, core::result::Result<(), anyhow::Error>> (self=0x55db535cd448, f=<error reading variable: Cannot access memory at address 0x2251>) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/local.rs:279
+#8  0x000055db4d6764a3 in async_io::driver::block_on<core::result::Result<(), anyhow::Error>, wezterm_client::client::client_thread_async::{async_fn_env#0}> (future=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-io-2.6.0/src/driver.rs:180
+#9  0x000055db4d5ddf96 in wezterm_client::client::client_thread (reconnectable=0x7f12b59f8920, local_domain_id=..., rx=0x7f12b59f8a70) at wezterm-client/src/client.rs:345
+#10 0x000055db4d5f063e in wezterm_client::client::{impl#7}::new::{closure#0} () at wezterm-client/src/client.rs:1054
+#11 0x000055db4d81c486 in std::sys::backtrace::__rust_begin_short_backtrace<wezterm_client::client::{impl#7}::new::{closure_env#0}, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158
+#12 0x000055db4d60e7df in std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure#0}<wezterm_client::client::{impl#7}::new::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:559
+#13 0x000055db4d88c114 in core::panic::unwind_safe::{impl#23}::call_once<(), std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_client::client::{impl#7}::new::{closure_env#0}, ()>> (self=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/panic/unwind_safe.rs:272
+#14 0x000055db4d73c66c in std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_client::client::{impl#7}::new::{closure_env#0}, ()>>, ()> (data=0x7f12b59f9668) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:589
+#15 0x000055db4d60f7bb in __rust_try ()
+#16 0x000055db4d60e35a in std::panicking::catch_unwind<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_client::client::{impl#7}::new::{closure_env#0}, ()>>> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panicking.rs:552
+#17 std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<std::thread::{impl#0}::spawn_unchecked_::{closure#1}::{closure_env#0}<wezterm_client::client::{impl#7}::new::{closure_env#0}, ()>>, ()> (f=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/panic.rs:359
+#18 std::thread::{impl#0}::spawn_unchecked_::{closure#1}<wezterm_client::client::{impl#7}::new::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/mod.rs:557
+#19 0x000055db4d7262ff in core::ops::function::FnOnce::call_once<std::thread::{impl#0}::spawn_unchecked_::{closure_env#1}<wezterm_client::client::{impl#7}::new::{closure_env#0}, ()>, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#20 0x000055db50475317 in std::sys::pal::unix::thread::Thread::new::thread_start ()
+#21 0x00007f131fc7ff54 in start_thread () from /lib64/libc.so.6
+#22 0x00007f131fd0332c in __clone3 () from /lib64/libc.so.6
+
+Thread 1 (Thread 0x7f131f57b600 (LWP 1046776) "wezterm-gui"):
+#0  0x00007f131fc88462 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f131fc7c75c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f131fc7c7a4 in __syscall_cancel () from /lib64/libc.so.6
+#3  0x00007f131fcf72be in write () from /lib64/libc.so.6
+#4  0x000055db504796bf in <std::io::stdio::StderrLock as std::io::Write>::write_all ()
+#5  0x000055db50488f2a in <std::io::default_write_fmt::Adapter<T> as core::fmt::Write>::write_str ()
+#6  0x000055db504ba4c7 in core::fmt::write ()
+#7  0x000055db5048883f in std::io::default_write_fmt ()
+#8  0x000055db504793da in <&std::io::stdio::Stderr as std::io::Write>::write_fmt ()
+#9  0x000055db50479326 in <std::io::stdio::Stderr as std::io::Write>::write_fmt ()
+#10 0x000055db4c4a1d22 in env_bootstrap::ringlog::{impl#3}::log (self=0x55db71eb78c0, record=0x7ffc6b0068b8) at env-bootstrap/src/ringlog.rs:191
+#11 0x000055db4ffbf942 in log::__private_api::{impl#2}::log (self=0x7ffc6b0067f7, record=0x7ffc6b0068b8) at src/__private_api.rs:47
+#12 0x000055db4d1bf5a1 in log::__private_api::log_impl<log::__private_api::GlobalLogger> (logger=..., args=..., level=log::Level::Warn, kvs=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.28/src/__private_api.rs:81
+#13 0x000055db4d1bf35d in log::__private_api::log<(), log::__private_api::GlobalLogger> (logger=..., args=..., level=log::Level::Warn, target_module_path_and_loc=0x7ffc6b0075f8, kvs=()) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.28/src/__private_api.rs:94
+#14 0x000055db4c23aa07 in wezterm_gui::termwindow::TermWindow::paint_impl (self=0x55db7203b878, frame=0x7ffc6b007ee0) at wezterm-gui/src/termwindow/render/paint.rs:125
+#15 0x000055db4c25d0a6 in wezterm_gui::termwindow::TermWindow::do_paint (self=0x55db7203b878, window=0x55db71fbc2c8) at wezterm-gui/src/termwindow/mod.rs:1109
+#16 0x000055db4c25b92e in wezterm_gui::termwindow::TermWindow::dispatch_window_event (self=0x55db7203b878, event=..., window=0x55db71fbc2c8) at wezterm-gui/src/termwindow/mod.rs:1035
+#17 0x000055db4c3e75b8 in wezterm_gui::termwindow::{impl#4}::new_window::{async_fn#0}::{closure#7} (event=..., window=0x55db71fbc2c8) at wezterm-gui/src/termwindow/mod.rs:854
+#18 0x000055db4e4bd732 in alloc::boxed::{impl#29}::call_mut<(window::WindowEvent, &window::os::x_and_wayland::Window), dyn core::ops::function::FnMut<(window::WindowEvent, &window::os::x_and_wayland::Window), Output=()>, alloc::alloc::Global> (self=0x55db71fbc2d8, args=...) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/alloc/src/boxed.rs:1978
+#19 0x000055db4e15598b in window::WindowEventSender::dispatch (self=0x55db71fbc2c8, event=...) at window/src/lib.rs:241
+#20 0x000055db4e4c4388 in window::os::wayland::window::WaylandWindowInner::do_paint (self=0x55db71fbc278) at window/src/os/wayland/window.rs:1245
+#21 0x000055db4e4ca87d in window::os::wayland::window::{impl#3}::do_paint::{async_block#0}::{closure#0} (inner=0x55db71fbc278) at window/src/os/wayland/window.rs:1256
+#22 0x000055db4e3df9aa in window::os::wayland::connection::{impl#0}::with_window_inner::{async_block#0}<(), window::os::wayland::window::{impl#3}::do_paint::{async_block#0}::{closure_env#0}> () at window/src/os/wayland/connection.rs:151
+#23 0x000055db4e3122b6 in async_task::raw::RawTask<window::os::wayland::connection::{impl#0}::with_window_inner::{async_block_env#0}<(), window::os::wayland::window::{impl#3}::do_paint::{async_block#0}::{closure_env#0}>, (), promise::spawn::spawn_into_main_thread::{closure_env#0}<window::os::wayland::connection::{impl#0}::with_window_inner::{async_block_env#0}<(), window::os::wayland::window::{impl#3}::do_paint::{async_block#0}::{closure_env#0}>, ()>, ()>::run<window::os::wayland::connection::{impl#0}::with_window_inner::{async_block_env#0}<(), window::os::wayland::window::{impl#3}::do_paint::{async_block#0}::{closure_env#0}>, (), promise::spawn::spawn_into_main_thread::{closure_env#0}<window::os::wayland::connection::{impl#0}::with_window_inner::{async_block_env#0}<(), window::os::wayland::window::{impl#3}::do_paint::{async_block#0}::{closure_env#0}>, ()>, ()> (ptr=0x7f12e0001660) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-task-4.7.1/src/raw.rs:557
+#24 0x000055db4ffdd16f in async_task::runnable::Runnable<()>::run<()> (self=...) at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-task-4.7.1/src/runnable.rs:781
+#25 0x000055db4e232d7b in window::spawn::schedule_with_pri::{closure#0} () at window/src/spawn.rs:40
+#26 0x000055db4e1b7d71 in core::ops::function::FnOnce::call_once<window::spawn::schedule_with_pri::{closure_env#0}, ()> () at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253
+#27 0x000055db4f3d2ff8 in alloc::boxed::{impl#28}::call_once<(), (dyn core::ops::function::FnOnce<(), Output=()> + core::marker::Send), alloc::alloc::Global> (self=..., args=()) at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/alloc/src/boxed.rs:1971
+#28 0x000055db4e21ad6f in window::spawn::SpawnQueue::run_impl (self=0x55db71fcf560) at window/src/spawn.rs:169
+#29 0x000055db4e2197fa in window::spawn::SpawnQueue::run (self=0x55db71fcf560) at window/src/spawn.rs:63
+#30 0x000055db4e4b1770 in window::os::wayland::connection::WaylandConnection::run_message_loop_impl (self=0x55db71f49e80) at window/src/os/wayland/connection.rs:78
+#31 0x000055db4e4b2583 in window::os::wayland::connection::{impl#1}::run_message_loop (self=0x55db71f49e80) at window/src/os/wayland/connection.rs:171
+#32 0x000055db4e1ed303 in window::os::x_and_wayland::{impl#1}::run_message_loop (self=0x55db71ed8870) at window/src/os/x_and_wayland.rs:150
+#33 0x000055db4be1037b in wezterm_gui::frontend::GuiFrontEnd::run_forever (self=0x55db71edaeb0) at wezterm-gui/src/frontend.rs:325
+#34 0x000055db4bfa5370 in wezterm_gui::run_terminal_gui (opts=..., default_domain_name=...) at wezterm-gui/src/main.rs:794
+#35 0x000055db4bfac8cf in wezterm_gui::run () at wezterm-gui/src/main.rs:1263
+#36 0x000055db4bfa5b31 in wezterm_gui::main () at wezterm-gui/src/main.rs:840

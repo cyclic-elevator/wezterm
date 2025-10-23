@@ -51,6 +51,7 @@ mod selection;
 mod shapecache;
 mod spawn;
 mod stats;
+mod callback_cache;
 mod tab_title_cache;
 mod tabbar;
 mod termwindow;

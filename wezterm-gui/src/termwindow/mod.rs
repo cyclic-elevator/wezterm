@@ -1729,8 +1729,8 @@ impl TermWindow {
             self.config_overrides
         );
         
-        // Invalidate tab title cache on config reload
-        crate::tab_title_cache::invalidate_tab_title_cache();
+        // Invalidate all caches on config reload
+        crate::callback_cache::invalidate_all_caches();
         
         self.key_table_state.clear_stack();
         self.connection_name = Connection::get().unwrap().name();
@@ -1959,8 +1959,8 @@ impl TermWindow {
     /// Called by window:set_right_status after the status has
     /// been updated; let's update the bar
     pub fn update_title_post_status(&mut self) {
-        // Invalidate tab title cache when tab state changes
-        crate::tab_title_cache::invalidate_tab_title_cache();
+        // Invalidate all caches when tab state changes
+        crate::callback_cache::invalidate_all_caches();
         self.update_title_impl();
     }
 
@@ -2023,59 +2023,57 @@ impl TermWindow {
         }
         drop(window);
 
-        let title = match config::run_immediate_with_lua_config(|lua| {
-            if let Some(lua) = lua {
-                let tabs = lua.create_sequence_from(tabs.clone().into_iter())?;
-                let panes = lua.create_sequence_from(panes.clone().into_iter())?;
+        // Create cache key from current state
+        let cache_key = crate::callback_cache::WindowTitleKey::new(
+            active_tab.as_ref().map(|t| t.tab_index),
+            active_pane.as_ref().map(|p| p.pane_index),
+            active_tab
+                .as_ref()
+                .map(|t| t.tab_title.clone())
+                .unwrap_or_default(),
+            active_pane
+                .as_ref()
+                .map(|p| p.title.clone())
+                .unwrap_or_default(),
+            num_tabs,
+            active_pane.as_ref().map(|p| p.is_zoomed).unwrap_or(false),
+        );
 
-                let v = config::lua::emit_sync_callback(
-                    &*lua,
-                    (
-                        "format-window-title".to_string(),
+        // Use cached version - check cache first for instant return
+        let title = crate::callback_cache::get_window_title_cached(cache_key, || {
+            match config::run_immediate_with_lua_config(|lua| {
+                if let Some(lua) = lua {
+                    let tabs = lua.create_sequence_from(tabs.clone().into_iter())?;
+                    let panes = lua.create_sequence_from(panes.clone().into_iter())?;
+
+                    let v = config::lua::emit_sync_callback(
+                        &*lua,
                         (
-                            active_tab.clone(),
-                            active_pane.clone(),
-                            tabs,
-                            panes,
-                            (*self.config).clone(),
+                            "format-window-title".to_string(),
+                            (
+                                active_tab.clone(),
+                                active_pane.clone(),
+                                tabs,
+                                panes,
+                                (*self.config).clone(),
+                            ),
                         ),
-                    ),
-                )?;
-                match &v {
-                    mlua::Value::Nil => Ok(None),
-                    _ => Ok(Some(String::from_lua(v, &*lua)?)),
-                }
-            } else {
-                Ok(None)
-            }
-        }) {
-            Ok(s) => s,
-            Err(err) => {
-                log::warn!("format-window-title: {}", err);
-                None
-            }
-        };
-
-        let title = match title {
-            Some(title) => title,
-            None => {
-                if let (Some(pos), Some(tab)) = (active_pane, active_tab) {
-                    if num_tabs == 1 {
-                        format!("{}{}", if pos.is_zoomed { "[Z] " } else { "" }, pos.title)
-                    } else {
-                        format!(
-                            "{}[{}/{}] {}",
-                            if pos.is_zoomed { "[Z] " } else { "" },
-                            tab.tab_index + 1,
-                            num_tabs,
-                            pos.title
-                        )
+                    )?;
+                    match &v {
+                        mlua::Value::Nil => Ok(None),
+                        _ => Ok(Some(String::from_lua(v, &*lua)?)),
                     }
                 } else {
-                    "".to_string()
+                    Ok(None)
+                }
+            }) {
+                Ok(s) => s,
+                Err(err) => {
+                    log::warn!("format-window-title: {}", err);
+                    None
                 }
             }
-        };
+        });
 
         if let Some(window) = self.window.as_ref() {
             window.set_title(&title);

@@ -326,6 +326,9 @@ impl WaylandWindow {
 
             paint_throttled: false,
             last_paint: Instant::now(),
+            resize_throttled: false,
+            last_resize: Instant::now(),
+            pending_resize: None,
 
             config,
 
@@ -589,6 +592,9 @@ pub struct WaylandWindowInner {
     invalidated: bool,
     paint_throttled: bool,
     last_paint: Instant,
+    resize_throttled: bool,
+    last_resize: Instant,
+    pending_resize: Option<(u32, u32)>,
     // font_config: Rc<FontConfiguration>,
     text_cursor: Option<Rect>,
     appearance: Appearance,
@@ -849,6 +855,45 @@ impl WaylandWindowInner {
         }
 
         if let Some((mut w, mut h)) = pending.configure.take() {
+            // Check if we should throttle this resize event
+            let now = Instant::now();
+            let throttle_duration = Duration::from_millis(16); // 16ms = ~60fps
+            
+            if now.duration_since(self.last_resize) < throttle_duration {
+                // Too soon since last resize - accumulate this change
+                self.pending_resize = Some((w, h));
+                
+                // Schedule a deferred resize if not already scheduled
+                if !self.resize_throttled {
+                    self.resize_throttled = true;
+                    let window_id = SurfaceUserData::from_wl(self.surface()).window_id;
+                    
+                    promise::spawn::spawn(async move {
+                        async_io::Timer::after(throttle_duration).await;
+                        WaylandConnection::with_window_inner(window_id, |inner| {
+                            inner.resize_throttled = false;
+                            if let Some((w, h)) = inner.pending_resize.take() {
+                                // Re-inject the pending resize as a new configure event
+                                inner.pending_event
+                                    .lock()
+                                    .unwrap()
+                                    .configure
+                                    .replace((w, h));
+                                inner.dispatch_pending_event();
+                            }
+                            Ok(())
+                        });
+                    }).detach();
+                }
+                
+                log::trace!("Resize throttled, pending: w:{w}, h:{h}");
+                return;  // Skip processing this resize event
+            }
+            
+            // Not throttled - process immediately
+            self.last_resize = now;
+            self.pending_resize = None;
+            
             log::trace!("Pending configure: w:{w}, h{h} -- {:?}", self.window);
             if self.window.is_some() {
                 let surface_udata = SurfaceUserData::from_wl(self.surface());

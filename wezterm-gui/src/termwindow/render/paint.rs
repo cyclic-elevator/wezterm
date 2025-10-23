@@ -107,34 +107,29 @@ impl crate::TermWindow {
                                 *self.pending_texture_growth.borrow_mut() = Some(size);
                                 *self.texture_growth_deferred_count.borrow_mut() += 1;
                                 
+                                // Use current atlas with degraded quality for this frame
+                                self.allow_images = match self.allow_images {
+                                    AllowImage::Yes => AllowImage::Scale(2),
+                                    AllowImage::Scale(2) => AllowImage::Scale(4),
+                                    AllowImage::Scale(4) => AllowImage::Scale(8),
+                                    AllowImage::Scale(_) | AllowImage::No => AllowImage::No,
+                                };
+                                
                                 log::warn!(
-                                    "Texture atlas out of space (need {}, current {}). Deferring growth to next frame (deferred {} times).",
+                                    "Texture atlas out of space (need {}, current {}). Deferring growth to next frame (deferred {} times). Rendering with degraded quality {:?} this frame.",
                                     size,
                                     current_size,
-                                    self.texture_growth_deferred_count.borrow()
+                                    self.texture_growth_deferred_count.borrow(),
+                                    self.allow_images
                                 );
                             }
                             
-                            // Use current atlas with degraded quality for this frame
-                            self.allow_images = match self.allow_images {
-                                AllowImage::Yes => AllowImage::Scale(2),
-                                AllowImage::Scale(2) => AllowImage::Scale(4),
-                                AllowImage::Scale(4) => AllowImage::Scale(8),
-                                AllowImage::Scale(8) => AllowImage::No,
-                                AllowImage::No | _ => {
-                                    log::warn!("Already at maximum image scaling, skipping images this frame");
-                                    AllowImage::No
-                                }
-                            };
-
-                            log::info!(
-                                "Not enough texture space; rendering with degraded quality {:?} this frame",
-                                self.allow_images
-                            );
-                            
                             self.invalidate_fancy_tab_bar();
                             self.invalidate_modal();
-                            // Don't break - continue rendering with degraded quality
+                            
+                            // CRITICAL: Break the loop to allow frame to complete!
+                            // The queued texture growth will be applied at the start of next frame.
+                            break 'pass;
                         }
                     } else if err.root_cause().downcast_ref::<ClearShapeCache>().is_some() {
                         self.invalidate_fancy_tab_bar();

@@ -1,0 +1,330 @@
+warning: unused variable: `backend`
+   --> window/src/os/wayland/window.rs:414:21
+    |
+414 |                 let backend = gl_state.get_framebuffer_dimensions(); // Just to ensure context is valid
+    |                     ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_backend`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+warning: unused variable: `gl_state`
+    --> window/src/os/wayland/window.rs:1200:21
+     |
+1200 |         if let Some(gl_state) = self.gl_state.as_ref() {
+     |                     ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gl_state`
+
+warning: fields `last_paint` and `triple_buffer_manager` are never read
+   --> window/src/os/wayland/window.rs:632:5
+    |
+610 | pub struct WaylandWindowInner {
+    |            ------------------ fields in this struct
+...
+632 |     last_paint: Instant,
+    |     ^^^^^^^^^^
+...
+648 |     triple_buffer_manager: RefCell<crate::os::wayland::triplebuffer::TripleBufferManager>,
+    |     ^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: associated function `create` is never used
+  --> window/src/os/wayland/gpufence.rs:34:12
+   |
+28 | impl GpuFence {
+   | ------------- associated function in this implementation
+...
+34 |     pub fn create(
+   |            ^^^^^^
+
+warning: method `create_fence` is never used
+   --> window/src/os/wayland/gpufence.rs:164:12
+    |
+146 | impl GpuFenceManager {
+    | -------------------- method in this implementation
+...
+164 |     pub fn create_fence(
+    |            ^^^^^^^^^^^^
+
+warning: struct `PresentationFeedback` is never constructed
+  --> window/src/os/wayland/presentation.rs:18:12
+   |
+18 | pub struct PresentationFeedback {
+   |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `predict_next_vsync` and `optimal_render_start` are never used
+  --> window/src/os/wayland/presentation.rs:48:12
+   |
+46 | impl PresentationFeedback {
+   | ------------------------- methods in this implementation
+47 |     /// Predict the next vsync time based on this feedback
+48 |     pub fn predict_next_vsync(&self) -> Instant {
+   |            ^^^^^^^^^^^^^^^^^^
+...
+58 |     pub fn optimal_render_start(&self, render_time_budget: Duration) -> Instant {
+   |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `PresentationManager` is never constructed
+  --> window/src/os/wayland/presentation.rs:72:12
+   |
+72 | pub struct PresentationManager {
+   |            ^^^^^^^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> window/src/os/wayland/presentation.rs:93:12
+    |
+ 88 | impl PresentationManager {
+    | ------------------------ associated items in this implementation
+...
+ 93 |     pub fn new(default_refresh_hz: u32) -> Self {
+    |            ^^^
+...
+107 |     pub fn record_feedback(&mut self, feedback: PresentationFeedback) {
+    |            ^^^^^^^^^^^^^^^
+...
+138 |     pub fn predict_next_vsync(&self) -> Instant {
+    |            ^^^^^^^^^^^^^^^^^^
+...
+150 |     pub fn optimal_render_start(&self, render_time_budget: Duration) -> Instant {
+    |            ^^^^^^^^^^^^^^^^^^^^
+...
+162 |     pub fn should_render_now(&self, render_time_budget: Duration) -> bool {
+    |            ^^^^^^^^^^^^^^^^^
+...
+167 |     pub fn refresh_interval(&self) -> Duration {
+    |            ^^^^^^^^^^^^^^^^
+...
+172 |     pub fn refresh_rate_hz(&self) -> f64 {
+    |            ^^^^^^^^^^^^^^^
+...
+177 |     pub fn log_stats(&self) {
+    |            ^^^^^^^^^
+
+warning: variants `Rendering`, `Queued`, and `Displayed` are never constructed
+  --> window/src/os/wayland/triplebuffer.rs:22:5
+   |
+17 | pub enum BufferState {
+   |          ----------- variants in this enum
+...
+22 |     Rendering,
+   |     ^^^^^^^^^
+...
+25 |     Queued,
+   |     ^^^^^^
+...
+28 |     Displayed,
+   |     ^^^^^^^^^
+   |
+   = note: `BufferState` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: fields `id`, `state`, `state_changed`, and `use_count` are never read
+  --> window/src/os/wayland/triplebuffer.rs:35:9
+   |
+33 | pub struct BufferMetadata {
+   |            -------------- fields in this struct
+34 |     /// Unique identifier for this buffer (0, 1, or 2)
+35 |     pub id: usize,
+   |         ^^
+...
+38 |     pub state: BufferState,
+   |         ^^^^^
+...
+41 |     pub state_changed: Instant,
+   |         ^^^^^^^^^^^^^
+...
+44 |     pub use_count: usize,
+   |         ^^^^^^^^^
+   |
+   = note: `BufferMetadata` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: methods `transition_to` and `time_in_state` are never used
+  --> window/src/os/wayland/triplebuffer.rs:57:8
+   |
+47 | impl BufferMetadata {
+   | ------------------- methods in this implementation
+...
+57 |     fn transition_to(&mut self, new_state: BufferState) {
+   |        ^^^^^^^^^^^^^
+...
+65 |     fn time_in_state(&self) -> Duration {
+   |        ^^^^^^^^^^^^^
+
+warning: fields `buffers`, `current_buffer`, `total_frames`, `buffer_starvation_count`, `last_stats_log`, and `last_starvation_warning` are never read
+  --> window/src/os/wayland/triplebuffer.rs:84:5
+   |
+82 | pub struct TripleBufferManager {
+   |            ------------------- fields in this struct
+83 |     /// Metadata for the three buffers
+84 |     buffers: [BufferMetadata; 3],
+   |     ^^^^^^^
+...
+87 |     current_buffer: usize,
+   |     ^^^^^^^^^^^^^^
+...
+90 |     total_frames: usize,
+   |     ^^^^^^^^^^^^
+91 |     buffer_starvation_count: usize,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^
+...
+94 |     last_stats_log: Instant,
+   |     ^^^^^^^^^^^^^^
+95 |     last_starvation_warning: Instant,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> window/src/os/wayland/triplebuffer.rs:119:12
+    |
+ 98 | impl TripleBufferManager {
+    | ------------------------ methods in this implementation
+...
+119 |     pub fn acquire_buffer(&mut self) -> Option<usize> {
+    |            ^^^^^^^^^^^^^^
+...
+166 |     pub fn queue_current_buffer(&mut self) {
+    |            ^^^^^^^^^^^^^^^^^^^^
+...
+184 |     pub fn mark_displayed(&mut self, buffer_id: usize) {
+    |            ^^^^^^^^^^^^^^
+...
+198 |     pub fn release_buffer(&mut self, buffer_id: usize) {
+    |            ^^^^^^^^^^^^^^
+...
+210 |     pub fn current_buffer(&self) -> usize {
+    |            ^^^^^^^^^^^^^^
+...
+215 |     pub fn buffer_info(&self, buffer_id: usize) -> Option<&BufferMetadata> {
+    |            ^^^^^^^^^^^
+...
+220 |     pub fn log_stats(&self) {
+    |            ^^^^^^^^^
+...
+242 |     pub fn maybe_log_stats(&mut self) {
+    |            ^^^^^^^^^^^^^^^
+
+warning: `window` (lib) generated 14 warnings
+   Compiling wezterm-gui v0.1.0 (/home/alpha/git/cyclic-elevator-wezterm/wezterm-gui)
+   Compiling wezterm-mux-server v0.1.0 (/home/alpha/git/cyclic-elevator-wezterm/wezterm-mux-server)
+   Compiling wezterm v0.1.0 (/home/alpha/git/cyclic-elevator-wezterm/wezterm)
+warning: unused import: `Duration`
+ --> wezterm-gui/src/tab_title_cache.rs:7:17
+  |
+7 | use std::time::{Duration, Instant};
+  |                 ^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused import: `unicode_column_width`
+ --> wezterm-gui/src/tabbar.rs:5:21
+  |
+5 | use termwiz::cell::{unicode_column_width, Cell, CellAttributes};
+  |                     ^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `AnsiColor`
+ --> wezterm-gui/src/tabbar.rs:6:22
+  |
+6 | use termwiz::color::{AnsiColor, ColorSpec};
+  |                      ^^^^^^^^^
+
+warning: unused import: `FormatColor`
+  --> wezterm-gui/src/tabbar.rs:11:40
+   |
+11 | use termwiz_funcs::{format_as_escapes, FormatColor, FormatItem};
+   |                                        ^^^^^^^^^^^
+
+warning: unused import: `Progress`
+  --> wezterm-gui/src/tabbar.rs:12:26
+   |
+12 | use wezterm_term::{Line, Progress};
+   |                          ^^^^^^^^
+
+warning: struct `StatusKey` is never constructed
+  --> wezterm-gui/src/callback_cache.rs:62:12
+   |
+62 | pub struct StatusKey {
+   |            ^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: associated function `new` is never used
+  --> wezterm-gui/src/callback_cache.rs:71:12
+   |
+70 | impl StatusKey {
+   | -------------- associated function in this implementation
+71 |     pub fn new(active_pane_id: Option<usize>, active_pane_title: String) -> Self {
+   |            ^^^
+
+warning: method `clear` is never used
+   --> wezterm-gui/src/callback_cache.rs:142:12
+    |
+103 | impl<T: Clone> CallbackCache<T> {
+    | ------------------------------- method in this implementation
+...
+142 |     pub fn clear(&mut self) {
+    |            ^^^^^
+
+warning: function `get_status_cached` is never used
+   --> wezterm-gui/src/callback_cache.rs:184:8
+    |
+184 | pub fn get_status_cached<F>(key: StatusKey, compute_fn: F) -> Vec<StatusItem>
+    |        ^^^^^^^^^^^^^^^^^
+
+warning: methods `clear`, `cleanup_old_generations`, and `len` are never used
+   --> wezterm-gui/src/lua_ser_cache.rs:109:12
+    |
+ 50 | / impl<K, T> LuaTableCache<K, T>
+ 51 | | where
+ 52 | |     K: std::hash::Hash + Eq + Clone,
+ 53 | |     T: Clone,
+    | |_____________- methods in this implementation
+...
+109 |       pub fn clear(&mut self) {
+    |              ^^^^^
+...
+116 |       pub fn cleanup_old_generations(&mut self) {
+    |              ^^^^^^^^^^^^^^^^^^^^^^^
+...
+130 |       pub fn len(&self) -> usize {
+    |              ^^^
+
+warning: function `cleanup_lua_caches` is never used
+   --> wezterm-gui/src/lua_ser_cache.rs:235:8
+    |
+235 | pub fn cleanup_lua_caches() {
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: function `get_cache_stats` is never used
+   --> wezterm-gui/src/lua_ser_cache.rs:248:8
+    |
+248 | pub fn get_cache_stats() -> (usize, usize) {
+    |        ^^^^^^^^^^^^^^^
+
+warning: field `computed_at` is never read
+  --> wezterm-gui/src/tab_title_cache.rs:79:5
+   |
+76 | struct CachedTitleEntry {
+   |        ---------------- field in this struct
+...
+79 |     computed_at: Instant,
+   |     ^^^^^^^^^^^
+
+warning: method `clear` is never used
+   --> wezterm-gui/src/tab_title_cache.rs:124:12
+    |
+ 87 | impl TabTitleCache {
+    | ------------------ method in this implementation
+...
+124 |     pub fn clear(&mut self) {
+    |            ^^^^^
+
+warning: function `clear_tab_title_cache` is never used
+   --> wezterm-gui/src/tab_title_cache.rs:258:8
+    |
+258 | pub fn clear_tab_title_cache() {
+    |        ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `pct_to_glyph` is never used
+   --> wezterm-gui/src/tabbar.rs:131:4
+    |
+131 | fn pct_to_glyph(pct: u8) -> char {
+    |    ^^^^^^^^^^^^
+
+warning: `wezterm-gui` (bin "wezterm-gui") generated 16 warnings (run `cargo fix --bin "wezterm-gui"` to apply 5 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 33.24s

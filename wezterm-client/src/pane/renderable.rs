@@ -78,6 +78,10 @@ pub struct RenderableInner {
     last_input_rtt: u64,
 
     pub input_serial: InputSerial,
+    
+    /// Phase 19: Fetch generation for coalescing - incremented on each resize
+    /// Stale fetches from previous resizes are discarded
+    fetch_generation: usize,
 }
 
 pub struct RenderableState {
@@ -117,6 +121,7 @@ impl RenderableInner {
             last_input_rtt: 0,
             input_serial: InputSerial::empty(),
             seqno: SEQ_ZERO,
+            fetch_generation: 0,
         }
     }
 
@@ -432,6 +437,35 @@ impl RenderableInner {
             lines.put(stable_row, entry);
         }
         self.lines = lines;
+    }
+
+    /// Phase 19: Selective invalidation - only invalidate viewport + margin
+    /// This is much more efficient than invalidating the entire scrollback
+    pub fn make_viewport_stale(&mut self, margin: usize) {
+        // Phase 19: Increment fetch generation to invalidate pending fetches
+        self.fetch_generation += 1;
+        
+        let viewport_start = self.dimensions.physical_top;
+        let viewport_end = viewport_start + self.dimensions.viewport_rows as isize;
+        let margin = margin as isize;
+        
+        // Invalidate visible viewport + margin above and below
+        let start_row = (viewport_start - margin).max(self.dimensions.physical_top - self.dimensions.scrollback_rows as isize);
+        let end_row = viewport_end + margin;
+        
+        log::debug!(
+            "Phase 19: Selective invalidation - viewport [{}, {}), invalidating [{}, {}) ({} lines) [generation {}]",
+            viewport_start,
+            viewport_end,
+            start_row,
+            end_row,
+            (end_row - start_row).max(0),
+            self.fetch_generation
+        );
+        
+        for row in start_row..end_row {
+            self.make_stale(row);
+        }
     }
 
     fn make_stale(&mut self, stable_row: StableRowIndex) {

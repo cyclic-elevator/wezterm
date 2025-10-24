@@ -393,6 +393,23 @@ impl Pane for ClientPane {
         let cols = size.cols as usize;
         let rows = size.rows as usize;
 
+        // Phase 19.2: Check if this is a redundant resize call (dimensions unchanged)
+        let is_redundant = inner.dimensions.cols == cols
+            && inner.dimensions.viewport_rows == rows
+            && inner.dimensions.pixel_width == size.pixel_width
+            && inner.dimensions.pixel_height == size.pixel_height;
+        
+        if is_redundant {
+            // Phase 19.2: REDUNDANT resize - dimensions unchanged! This is the resize storm bug!
+            log::error!("🔴 RESIZE STORM: Redundant resize {}x{} (pane_id: {}) - dimensions unchanged!", 
+                size.cols, size.rows, self.remote_pane_id);
+            return Ok(());
+        }
+        
+        // Phase 19.1: Emergency logging to verify this code path is being used
+        log::error!("🚨 PHASE 19 CLIENTPANE RESIZE: {}x{} → {}x{} (pane_id: {}) 🚨", 
+            inner.dimensions.cols, inner.dimensions.viewport_rows, cols, rows, self.remote_pane_id);
+
         if inner.dimensions.cols != cols
             || inner.dimensions.viewport_rows != rows
             || inner.dimensions.pixel_width != size.pixel_width

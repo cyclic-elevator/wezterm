@@ -297,7 +297,38 @@ fn process_unilateral(
             .detach();
             return Ok(());
         }
-        Pdu::TabResized(_) | Pdu::TabAddedToWindow(_) => {
+        // Phase 19.2 Priority 1: Handle TabResized with topology awareness
+        Pdu::TabResized(info) => {
+            let topology_changed = info.topology_changed;
+            log::trace!("TabResized {:?} topology_changed={}", info.tab_id, topology_changed);
+            
+            promise::spawn::spawn_into_main_thread(async move {
+                let mux = Mux::try_get().ok_or_else(|| anyhow!("no more mux"))?;
+                let client_domain = mux
+                    .get_domain(local_domain_id)
+                    .ok_or_else(|| anyhow!("no such domain {}", local_domain_id))?;
+                let client_domain =
+                    client_domain
+                        .downcast_ref::<ClientDomain>()
+                        .ok_or_else(|| {
+                            anyhow!("domain {} is not a ClientDomain instance", local_domain_id)
+                        })?;
+
+                if topology_changed {
+                    // Topology changed (splits, zoom) - do full resync
+                    log::debug!("TabResized with topology change - full resync");
+                    client_domain.resync().await
+                } else {
+                    // Size-only change - lightweight update (no RPC needed!)
+                    log::debug!("TabResized size-only - skipping resync");
+                    Ok(())
+                }
+            })
+            .detach();
+
+            return Ok(());
+        }
+        Pdu::TabAddedToWindow(_) => {
             log::trace!("resync due to {:?}", decoded.pdu);
             promise::spawn::spawn_into_main_thread(async move {
                 let mux = Mux::try_get().ok_or_else(|| anyhow!("no more mux"))?;

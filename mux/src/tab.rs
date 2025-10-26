@@ -601,6 +601,11 @@ impl Tab {
         self.inner.lock().get_size()
     }
 
+    /// Phase 19.2 Priority 1: Helper to notify TabResized with topology information
+    fn notify_tab_resized(&self, topology_changed: bool) {
+        self.inner.lock().notify_tab_resized(topology_changed)
+    }
+
     /// Apply the new size of the tab to the panes contained within.
     /// The delta between the current and the new size is computed,
     /// and is distributed between the splits.  For small resizes
@@ -908,7 +913,8 @@ impl TabInner {
                 self.zoomed.replace(pane);
             }
         }
-        Mux::try_get().map(|mux| mux.notify(MuxNotification::TabResized(self.id)));
+        // Phase 19.2 Priority 1: zoom changes topology
+        self.notify_tab_resized(true);
     }
 
     fn contains_pane(&self, pane: PaneId) -> bool {
@@ -997,7 +1003,8 @@ impl TabInner {
                 }
             }
         }
-        Mux::try_get().map(|mux| mux.notify(MuxNotification::TabResized(self.id)));
+        // Phase 19.2 Priority 1: insert_pane changes topology
+        self.notify_tab_resized(true);
     }
 
     fn iter_panes_impl(&mut self, respect_zoom_state: bool) -> Vec<PositionedPane> {
@@ -1136,6 +1143,17 @@ impl TabInner {
         self.size
     }
 
+    /// Phase 19.2 Priority 1: Notify TabResized with topology information
+    fn notify_tab_resized(&mut self, topology_changed: bool) {
+        Mux::try_get().map(|mux| {
+            mux.notify(MuxNotification::TabResized {
+                tab_id: self.id,
+                size: Some(self.size),
+                topology_changed,
+            })
+        });
+    }
+
     fn resize(&mut self, size: TerminalSize) {
         if size.rows == 0 || size.cols == 0 {
             // Ignore "impossible" resize requests
@@ -1179,7 +1197,8 @@ impl TabInner {
             apply_sizes_from_splits(self.pane.as_mut().unwrap(), &size);
         }
 
-        Mux::try_get().map(|mux| mux.notify(MuxNotification::TabResized(self.id)));
+        // Phase 19.2 Priority 1: resize is size-only, no topology change
+        self.notify_tab_resized(false);
     }
 
     fn apply_pane_size(&mut self, pane_size: TerminalSize, cursor: &mut Cursor) {
@@ -1255,7 +1274,8 @@ impl TabInner {
                 self.size = size;
             }
         }
-        Mux::try_get().map(|mux| mux.notify(MuxNotification::TabResized(self.id)));
+        // Phase 19.2 Priority 1: rebuild_splits is topology-related
+        self.notify_tab_resized(true);
     }
 
     fn resize_split_by(&mut self, split_index: usize, delta: isize) {
@@ -1288,7 +1308,8 @@ impl TabInner {
         // Now cursor is looking at the split
         self.adjust_node_at_cursor(&mut cursor, delta);
         self.cascade_size_from_cursor(cursor);
-        Mux::try_get().map(|mux| mux.notify(MuxNotification::TabResized(self.id)));
+        // Phase 19.2 Priority 1: resize_split_by changes split sizes (topology)
+        self.notify_tab_resized(true);
     }
 
     fn adjust_node_at_cursor(&mut self, cursor: &mut Cursor, delta: isize) {
@@ -1371,7 +1392,8 @@ impl TabInner {
                 }
             }
         }
-        Mux::try_get().map(|mux| mux.notify(MuxNotification::TabResized(self.id)));
+        // Phase 19.2 Priority 1: cascade_size changes split sizes (topology)
+        self.notify_tab_resized(true);
     }
 
     fn adjust_pane_size(&mut self, direction: PaneDirection, amount: usize) {

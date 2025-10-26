@@ -805,6 +805,10 @@ pub struct TabAddedToWindow {
 #[derive(Deserialize, Serialize, PartialEq, Debug)]
 pub struct TabResized {
     pub tab_id: TabId,
+    // Phase 19.2 Priority 1: Add size and topology information
+    // to avoid expensive resync() for size-only changes
+    pub size: Option<TerminalSize>,
+    pub topology_changed: bool,
 }
 
 #[derive(Deserialize, Serialize, PartialEq, Debug)]

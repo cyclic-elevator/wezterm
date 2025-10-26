@@ -172,10 +172,19 @@ where
                     .await?;
                 stream.flush().await.context("flushing PDU to client")?;
             }
-            Ok(Item::Notif(MuxNotification::TabResized(tab_id))) => {
-                Pdu::TabResized(codec::TabResized { tab_id })
-                    .encode_async(&mut stream, 0)
-                    .await?;
+            // Phase 19.2 Priority 1: Pass size and topology information to client
+            Ok(Item::Notif(MuxNotification::TabResized {
+                tab_id,
+                size,
+                topology_changed,
+            })) => {
+                Pdu::TabResized(codec::TabResized {
+                    tab_id,
+                    size,
+                    topology_changed,
+                })
+                .encode_async(&mut stream, 0)
+                .await?;
                 stream.flush().await.context("flushing PDU to client")?;
             }
             Ok(Item::Notif(MuxNotification::TabTitleChanged { tab_id, title })) => {

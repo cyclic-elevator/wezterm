@@ -1434,7 +1434,7 @@ impl TermWindow {
                     // Also handled by clientpane
                     self.update_title_post_status();
                 }
-                MuxNotification::TabResized(_) => {
+                MuxNotification::TabResized { .. } => {
                     // Also handled by wezterm-client
                     self.update_title_post_status();
                 }
@@ -1639,7 +1639,7 @@ impl TermWindow {
                 dead.store(true, Ordering::Relaxed);
                 return false;
             }
-            MuxNotification::TabResized(tab_id)
+            MuxNotification::TabResized { tab_id, .. }
             | MuxNotification::TabTitleChanged { tab_id, .. } => {
                 let mux = Mux::get();
                 if mux.window_containing_tab(tab_id) == Some(mux_window_id) {

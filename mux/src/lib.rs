@@ -82,7 +82,12 @@ pub enum MuxNotification {
         window_id: WindowId,
     },
     PaneFocused(PaneId),
-    TabResized(TabId),
+    // Phase 19.2 Priority 1: Enhanced with size and topology information  
+    TabResized {
+        tab_id: TabId,
+        size: Option<TerminalSize>,
+        topology_changed: bool,
+    },
     TabTitleChanged {
         tab_id: TabId,
         title: String,

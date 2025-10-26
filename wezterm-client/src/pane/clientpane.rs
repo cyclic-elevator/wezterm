@@ -21,6 +21,7 @@ use std::cell::RefCell;
 use std::collections::{BTreeMap, HashMap};
 use std::ops::Range;
 use std::sync::Arc;
+use std::sync::Mutex as StdMutex;
 use termwiz::input::KeyEvent;
 use termwiz::surface::SequenceNo;
 use url::Url;
@@ -31,12 +32,21 @@ use wezterm_term::{
     TerminalConfiguration, TerminalSize,
 };
 
+// Phase 19.3: pending resize state for true debounce
+#[derive(Default, Clone, Copy)]
+struct PendingResize {
+    size: Option<TerminalSize>,
+    generation: usize,
+}
+
 pub struct ClientPane {
     client: Arc<ClientInner>,
     local_pane_id: PaneId,
     pub remote_pane_id: PaneId,
     pub remote_tab_id: TabId,
     pub renderable: Mutex<RenderableState>,
+    // Phase 19.3: true debounce state for resize RPCs
+    pending_resize: Arc<StdMutex<PendingResize>>, 
     configured_palette: Mutex<ColorPalette>,
     palette: Mutex<ColorPalette>,
     application_palette: Mutex<bool>,
@@ -121,6 +131,7 @@ impl ClientPane {
             remote_tab_id,
             application_palette: Mutex::new(false),
             renderable: Mutex::new(render),
+            pending_resize: Arc::new(StdMutex::new(PendingResize::default())),
             writer: Mutex::new(writer),
             configured_palette: Mutex::new(palette.clone()),
             palette: Mutex::new(palette),
@@ -427,35 +438,61 @@ impl Pane for ClientPane {
             );
             inner.make_viewport_stale(100);
 
-            // Phase 19: Debounced server resize - just send after delay
-            // Selective invalidation already handled the local side
+            // Phase 19.3: True debounce with cancellation via generation token
             let client = Arc::clone(&self.client);
             let remote_pane_id = self.remote_pane_id;
             let remote_tab_id = self.remote_tab_id;
-            
-            log::debug!("Phase 19: Scheduling deferred resize to server (100ms delay)");
-            
+            let pending = Arc::clone(&self.pending_resize);
+
+            let generation = {
+                let mut p = pending.lock().unwrap();
+                p.generation = p.generation.wrapping_add(1);
+                p.size = Some(size);
+                p.generation
+            };
+
+            log::debug!(
+                "Phase 19.3: Scheduling deferred resize to server (100ms delay) gen={}",
+                generation
+            );
+
             promise::spawn::spawn(async move {
-                const DEBOUNCE_DURATION: std::time::Duration = std::time::Duration::from_millis(100);
+                const DEBOUNCE_DURATION: std::time::Duration =
+                    std::time::Duration::from_millis(100);
                 async_io::Timer::after(DEBOUNCE_DURATION).await;
-                
-                // Send the final size to server
-                log::debug!(
-                    "Phase 19: Sending deferred resize to server (size: {}x{})",
-                    size.cols,
-                    size.rows
-                );
-                
-                if let Err(e) = client
-                    .client
-                    .resize(Resize {
-                        containing_tab_id: remote_tab_id,
-                        pane_id: remote_pane_id,
-                        size,
-                    })
-                    .await
-                {
-                    log::warn!("Phase 19: Failed to send deferred resize: {}", e);
+
+                let maybe_size = {
+                    let p = pending.lock().unwrap();
+                    if p.generation == generation {
+                        p.size
+                    } else {
+                        None
+                    }
+                };
+
+                if let Some(final_size) = maybe_size {
+                    log::debug!(
+                        "Phase 19.3: Sending deferred resize to server (size: {}x{}) gen={}",
+                        final_size.cols,
+                        final_size.rows,
+                        generation
+                    );
+                    if let Err(e) = client
+                        .client
+                        .resize(Resize {
+                            containing_tab_id: remote_tab_id,
+                            pane_id: remote_pane_id,
+                            size: final_size,
+                        })
+                        .await
+                    {
+                        log::warn!("Phase 19.3: Failed to send deferred resize: {}", e);
+                    }
+                } else {
+                    log::trace!(
+                        "Phase 19.3: Debounced resize cancelled by newer generation {}",
+                        generation
+                    );
                 }
             })
             .detach();

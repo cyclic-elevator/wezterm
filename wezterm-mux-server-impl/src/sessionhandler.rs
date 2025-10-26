@@ -46,6 +46,9 @@ pub(crate) struct PerPane {
     seqno: SequenceNo,
     config_generation: usize,
     pub(crate) notifications: Vec<Alert>,
+    // Phase 19.3: coalesced push state
+    push_pending: bool,
+    push_in_flight: bool,
 }
 
 impl PerPane {
@@ -231,14 +234,37 @@ impl SessionHandler {
     }
 
     pub fn schedule_pane_push(&mut self, pane_id: PaneId) {
-        let sender = self.to_write_tx.clone();
+        // Phase 19.3: coalesce pushes: one in flight, accumulate at most one pending
         let per_pane = self.per_pane(pane_id);
+        {
+            let mut state = per_pane.lock().unwrap();
+            if state.push_in_flight {
+                state.push_pending = true;
+                return;
+            }
+            state.push_in_flight = true;
+        }
+
+        let sender = self.to_write_tx.clone();
         spawn_into_main_thread(async move {
-            let mux = Mux::get();
-            let pane = mux
-                .get_pane(pane_id)
-                .ok_or_else(|| anyhow!("no such pane {}", pane_id))?;
-            maybe_push_pane_changes(&pane, sender, per_pane)?;
+            loop {
+                let mux = Mux::get();
+                let pane = mux
+                    .get_pane(pane_id)
+                    .ok_or_else(|| anyhow!("no such pane {}", pane_id))?;
+                maybe_push_pane_changes(&pane, sender.clone(), Arc::clone(&per_pane))?;
+
+                let mut state = per_pane.lock().unwrap();
+                if state.push_pending {
+                    state.push_pending = false;
+                    // loop to perform one more push
+                    drop(state);
+                    continue;
+                } else {
+                    state.push_in_flight = false;
+                    break;
+                }
+            }
             Ok::<(), anyhow::Error>(())
         })
         .detach();

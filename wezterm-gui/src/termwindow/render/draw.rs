@@ -254,17 +254,62 @@ impl crate::TermWindow {
                     uniforms.add_struct("blink", &blink);
                     uniforms.add_struct("rapid_blink", &rapid_blink);
 
-                    frame.draw(
-                        vertices.glium().slice(0..vertex_count).unwrap(),
-                        vb.indices.glium().slice(0..index_count).unwrap(),
-                        gl_state.glyph_prog.as_ref().unwrap(),
-                        &uniforms,
-                        if subpixel_aa {
-                            &dual_source_blending
-                        } else {
-                            &alpha_blending
-                        },
-                    )?;
+                    // Defensive: derive safe slice ranges and skip if invalid
+                    let vbuf = vertices.glium();
+                    let ibuf = vb.indices.glium();
+
+                    let vlen = vbuf.len();
+                    let ilen = ibuf.len();
+                    let vcount = std::cmp::min(vertex_count, vlen);
+                    let icount = std::cmp::min(index_count, ilen);
+
+                    if vcount == 0 || icount == 0 {
+                        log::debug!(
+                            "draw skip: empty or invalid counts (vcount={}, icount={}, vlen={}, ilen={}, layer_idx={})",
+                            vcount,
+                            icount,
+                            vlen,
+                            ilen,
+                            idx
+                        );
+                    } else {
+                        let vslice = match vbuf.slice(0..vcount) {
+                            Some(s) => s,
+                            None => {
+                                log::debug!(
+                                    "draw skip: vertex slice None (vcount={}, vlen={}, layer_idx={})",
+                                    vcount, vlen, idx
+                                );
+                                continue;
+                            }
+                        };
+                        let islice = match ibuf.slice(0..icount) {
+                            Some(s) => s,
+                            None => {
+                                log::debug!(
+                                    "draw skip: index slice None (icount={}, ilen={}, layer_idx={})",
+                                    icount, ilen, idx
+                                );
+                                continue;
+                            }
+                        };
+
+                        let prog = match gl_state.glyph_prog.as_ref() {
+                            Some(p) => p,
+                            None => {
+                                log::error!("draw skip: glyph_prog is None");
+                                continue;
+                            }
+                        };
+
+                        frame.draw(
+                            vslice,
+                            islice,
+                            prog,
+                            &uniforms,
+                            if subpixel_aa { &dual_source_blending } else { &alpha_blending },
+                        )?;
+                    }
                 }
 
                 vb.next_index();

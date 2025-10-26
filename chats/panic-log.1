@@ -1,0 +1,89 @@
+08:51:19.786  WARN   wezterm_gui::termwindow::render::paint > Texture atlas out of space (need 512, current 256). Deferring growth to next frame (deferred 1 times). Rendering with degraded quality Scale(2) this frame.
+08:51:21.603  ERROR  env_bootstrap                          > panic at wezterm-gui/src/termwindow/render/draw.rs:259:66 - called `Option::unwrap()` on a `None` value
+   0: env_bootstrap::register_panic_hook::{{closure}}
+             at env-bootstrap/src/lib.rs:171:18
+   1: std::panicking::rust_panic_with_hook
+   2: std::panicking::begin_panic_handler::{{closure}}
+   3: std::sys::backtrace::__rust_end_short_backtrace
+   4: __rustc::rust_begin_unwind
+   5: regex_automata::dfa::search::find_rev
+             at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/regex-automata-0.4.11/src/dfa/dense.rs:3238:9
+   6: regex_automata::dfa::search::find_rev
+   7: regex_automata::dfa::search::find_rev
+             at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/regex-automata-0.4.11/src/dfa/dense.rs:3288:9
+   8: core::option::Option<T>::unwrap
+             at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/option.rs:1009:21
+      wezterm_gui::termwindow::render::draw::<impl wezterm_gui::termwindow::TermWindow>::call_draw_glium
+             at wezterm-gui/src/termwindow/render/draw.rs:259:66
+   9: wezterm_gui::termwindow::render::draw::<impl wezterm_gui::termwindow::TermWindow>::call_draw
+             at wezterm-gui/src/termwindow/render/draw.rs:15:55
+  10: wezterm_gui::termwindow::render::paint::<impl wezterm_gui::termwindow::TermWindow>::paint_impl
+             at wezterm-gui/src/termwindow/render/paint.rs:152:14
+  11: wezterm_gui::termwindow::TermWindow::do_paint
+             at wezterm-gui/src/termwindow/mod.rs:1210:14
+  12: wezterm_gui::termwindow::TermWindow::dispatch_window_event
+             at wezterm-gui/src/termwindow/mod.rs:1136:29
+  13: wezterm_gui::termwindow::TermWindow::new_window::{{closure}}::{{closure}}
+             at wezterm-gui/src/termwindow/mod.rs:953:38
+  14: <alloc::boxed::Box<F,A> as core::ops::function::FnMut<Args>>::call_mut
+             at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/alloc/src/boxed.rs:1978:9
+  15: window::WindowEventSender::dispatch
+             at window/src/lib.rs:241:13
+  16: window::os::wayland::window::WaylandWindowInner::do_paint
+             at window/src/os/wayland/window.rs:1321:21
+  17: window::os::wayland::window::WaylandWindowInner::invalidate
+             at window/src/os/wayland/window.rs:1119:14
+  18: <window::os::wayland::window::WaylandWindow as window::WindowOps>::invalidate::{{closure}}
+             at window/src/os/wayland/window.rs:456:19
+  19: window::os::wayland::connection::WaylandConnection::with_window_inner::{{closure}}
+             at window/src/os/wayland/connection.rs:151:29
+  20: async_task::raw::RawTask<F,T,S,M>::run
+             at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-task-4.7.1/src/raw.rs:557:17
+  21: async_task::runnable::Runnable<M>::run
+             at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-task-4.7.1/src/runnable.rs:781:18
+  22: window::spawn::schedule_with_pri::{{closure}}
+             at window/src/spawn.rs:40:22
+  23: core::ops::function::FnOnce::call_once{{vtable.shim}}
+             at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253:5
+  24: <alloc::boxed::Box<F,A> as core::ops::function::FnOnce<Args>>::call_once
+             at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/alloc/src/boxed.rs:1971:9
+  25: window::spawn::SpawnQueue::run_impl
+             at window/src/spawn.rs:169:13
+  26: window::spawn::SpawnQueue::run
+             at window/src/spawn.rs:63:14
+  27: window::os::wayland::connection::WaylandConnection::run_message_loop_impl
+             at window/src/os/wayland/connection.rs:78:42
+  28: <window::os::wayland::connection::WaylandConnection as window::connection::ConnectionOps>::run_message_loop
+             at window/src/os/wayland/connection.rs:171:24
+  29: <window::os::x_and_wayland::Connection as window::connection::ConnectionOps>::run_message_loop
+             at window/src/os/x_and_wayland.rs:150:35
+  30: wezterm_gui::frontend::GuiFrontEnd::run_forever
+             at wezterm-gui/src/frontend.rs:325:14
+  31: wezterm_gui::run_terminal_gui
+             at wezterm-gui/src/main.rs:794:9
+  32: wezterm_gui::run
+             at wezterm-gui/src/main.rs:1263:41
+  33: wezterm_gui::main
+             at wezterm-gui/src/main.rs:840:21
+  34: core::ops::function::FnOnce::call_once
+             at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/core/src/ops/function.rs:253:5
+  35: std::sys::backtrace::__rust_begin_short_backtrace
+             at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/sys/backtrace.rs:158:18
+  36: std::rt::lang_start::{{closure}}
+             at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/rt.rs:206:18
+  37: std::rt::lang_start_internal
+  38: std::rt::lang_start
+             at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/rt.rs:205:5
+  39: main
+  40: __libc_start_call_main
+  41: __libc_start_main_alias_2
+  42: regex_automata::dfa::search::find_rev
+             at /home/alpha/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/regex-automata-0.4.11/src/dfa/accel.rs:270:13
+
+
+thread 'main' panicked at wezterm-gui/src/termwindow/render/draw.rs:259:66:
+called `Option::unwrap()` on a `None` value
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+panicked at /var/tmp/rust-20250918-8903-wrglxo/rustc-1.90.0-src/library/std/src/thread/local.rs:281:25:
+
+thread panicked while processing panic. aborting.
